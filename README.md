@@ -21,12 +21,11 @@ var Cylon = require('cylon');
 
 // Initialize the robot
 Cylon.robot({
-  connection: { name: 'spark', adaptor: 'spark', port: '192.168.0.2' },
-  devices: [{name: 'led', driver: 'led', pin: 13},
-            {name: 'button', driver: 'button', pin: 2}],
+  connection: { name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123' },
+  device: {name: 'led', driver: 'led', pin: 'D0'}
 
   work: function(my) {
-    my.button.on('push', function() {my.led.toggle()});
+    every((1).second(), function() {my.led.toggle()});
   }
 }).start();
 ```
@@ -38,16 +37,13 @@ Cylon = require('cylon')
 # Initialize the robot
 Cylon.robot
   connection:
-    name: 'spark', adaptor: 'spark', port: '192.168.0.2'
+    name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123'
 
-  devices:
-    [
-      {name: 'led', driver: 'led', pin: 13},
-      {name: 'button', driver: 'button', pin: 2}
-    ]
+  device:
+    name: 'led', driver: 'led', pin: 'D0'
 
   work: (my) ->
-    my.button.on 'push', -> my.led.toggle()
+    every 1.second(), -> my.led.toggle()
 
 .start()
 ```
