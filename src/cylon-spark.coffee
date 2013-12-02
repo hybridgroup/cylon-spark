@@ -8,5 +8,18 @@
 
 'use strict';
 
-exports.awesome = ->
-  'awesome'
+require "./spark"
+GPIO = require "cylon-gpio"
+
+module.exports =
+  adaptor: (args...) ->
+    new Cylon.Adaptor.Spark(args...)
+
+  driver: (args...) ->
+    GPIO.driver(args...)
+
+  register: (robot) ->
+    Logger.debug "Registering Spark adaptor for #{robot.name}"
+    robot.registerAdaptor 'cylon-spark', 'spark'
+
+    GPIO.register robot

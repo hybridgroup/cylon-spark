@@ -1,6 +1,12 @@
 'use strict';
 
-cylonSpark = source("cylon-spark")
+# Needed so that tests don't implode
+namespace = require 'node-namespace'
+namespace 'Cylon', ->
+  class @Basestar
+    constructor: ->
+
+spark = source("cylon-spark")
 
 describe "basic tests", ->
   it "standard async test", (done) ->
@@ -29,8 +35,8 @@ describe "basic tests", ->
     # hard equal
     data[0].should.be.equal obj
 
-  # Now on to a `real` test
-  it "cylon-spark should be awesome", ->
-    cylonSpark.should.have.keys 'awesome'
-    cylonSpark.awesome.should.be.a 'function'
-    cylonSpark.awesome().should.be.equal 'awesome'
+  it "should be able to register", ->
+    spark.register.should.be.a 'function'
+
+  it "should be able to create adaptor", ->
+    spark.adaptor.should.be.a 'function'

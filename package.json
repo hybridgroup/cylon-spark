@@ -30,5 +30,11 @@
     "chai": "~1.7.2",
     "mocha": "~1.12.1",
     "sinon": "~1.7.3"
+  },
+  "dependencies": {
+    "restler": "~2.0.1",
+    "node-namespace": "~1.0.0",
+    "cylon": "~0.6.0",
+    "cylon-gpio": "~0.5.0"
   }
 }

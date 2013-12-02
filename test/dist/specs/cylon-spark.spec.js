@@ -1,8 +1,19 @@
 (function() {
   'use strict';
-  var cylonSpark;
+  var namespace, spark;
 
-  cylonSpark = source("cylon-spark");
+  namespace = require('node-namespace');
+
+  namespace('Cylon', function() {
+    return this.Basestar = (function() {
+      function Basestar() {}
+
+      return Basestar;
+
+    })();
+  });
+
+  spark = source("cylon-spark");
 
   describe("basic tests", function() {
     it("standard async test", function(done) {
@@ -34,10 +45,11 @@
       data[0].should.be.eql(obj);
       return data[0].should.be.equal(obj);
     });
-    return it("cylon-spark should be awesome", function() {
-      cylonSpark.should.have.keys('awesome');
-      cylonSpark.awesome.should.be.a('function');
-      return cylonSpark.awesome().should.be.equal('awesome');
+    it("should be able to register", function() {
+      return spark.register.should.be.a('function');
+    });
+    return it("should be able to create adaptor", function() {
+      return spark.adaptor.should.be.a('function');
     });
   });
 
