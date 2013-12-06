@@ -26,24 +26,17 @@ namespace "Cylon.Adaptor", ->
 
     connect: (callback) ->
       Logger.debug "Connecting to Spark '#{@name}'..."
-      restler.get "https://api.spark.io/v1/devices/#{@deviceId}",
-                  data: { access_token: @accessToken }
-      .on 'complete', ->
-        (callback)(null)
-        @connection.emit 'connect'
-
+      (callback)(null)
+      @connection.emit 'connect'
     disconnect: ->
       Logger.debug "Disconnecting from Spark '#{@name}'..."
 
     digitalRead: (pin, callback) ->
-      restler.get "https://api.spark.io/v1/devices/#{@deviceId}/digitalread",
-                  data: { access_token: @accessToken, params: pin }
-      .on 'complete', (data) ->
+      restler.get "https://api.spark.io/v1/devices/#{@deviceId}/digitalread", data: { access_token: @accessToken, params: pin } .on 'complete', (data) ->
         (callback)(data)
 
     digitalWrite: (pin, value) ->
-      restler.post "https://api.spark.io/v1/devices/#{@deviceId}/digitalwrite",
-                   data: { access_token: @accessToken, params: "#{pin},#{value}"}
+      restler.post "https://api.spark.io/v1/devices/#{@deviceId}/digitalwrite",data: { access_token: @accessToken, params: "#{pin},#{this.pinVal(value)}"}
 
     analogRead: (pin, callback) ->
       restler.get "https://api.spark.io/v1/devices/#{@deviceId}/analogread",
@@ -51,12 +44,19 @@ namespace "Cylon.Adaptor", ->
       .on 'complete', (data) ->
         (callback)(data)
 
-    analogWrite: (pin, value) ->
+    analogWrite: (pin, value) =>
       restler.post "https://api.spark.io/v1/devices/#{@deviceId}/analogwrite",
-                   data: { access_token: @accessToken, params: "#{pin},#{value}"}
+                   data: { access_token: @accessToken, params: "#{pin},#{this.pinVal(value)}"}
 
     pwmWrite: (pin, value) ->
       analogWrite pin, value
 
     servoWrite: (pin, value) ->
       analogWrite pin, value
+
+    pinVal: (value) ->
+      if value == 1
+        v = "HIGH"
+      else
+        v = "LOW"
+      return v

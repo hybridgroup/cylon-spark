@@ -10,6 +10,7 @@
 (function() {
   'use strict';
   var namespace, restler,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -22,6 +23,7 @@
       __extends(Spark, _super);
 
       function Spark(opts) {
+        this.analogWrite = __bind(this.analogWrite, this);
         Spark.__super__.constructor.apply(this, arguments);
         this.connection = opts.connection;
         this.name = opts.name;
@@ -36,14 +38,8 @@
 
       Spark.prototype.connect = function(callback) {
         Logger.debug("Connecting to Spark '" + this.name + "'...");
-        return restler.get("https://api.spark.io/v1/devices/" + this.deviceId, {
-          data: {
-            access_token: this.accessToken
-          }
-        }).on('complete', function() {
-          callback(null);
-          return this.connection.emit('connect');
-        });
+        callback(null);
+        return this.connection.emit('connect');
       };
 
       Spark.prototype.disconnect = function() {
@@ -55,9 +51,9 @@
           data: {
             access_token: this.accessToken,
             params: pin
-          }
-        }).on('complete', function(data) {
-          return callback(data);
+          }.on('complete', function(data) {
+            return callback(data);
+          })
         });
       };
 
@@ -65,7 +61,7 @@
         return restler.post("https://api.spark.io/v1/devices/" + this.deviceId + "/digitalwrite", {
           data: {
             access_token: this.accessToken,
-            params: "" + pin + "," + value
+            params: "" + pin + "," + (this.pinVal(value))
           }
         });
       };
@@ -85,7 +81,7 @@
         return restler.post("https://api.spark.io/v1/devices/" + this.deviceId + "/analogwrite", {
           data: {
             access_token: this.accessToken,
-            params: "" + pin + "," + value
+            params: "" + pin + "," + (this.pinVal(value))
           }
         });
       };
@@ -96,6 +92,16 @@
 
       Spark.prototype.servoWrite = function(pin, value) {
         return analogWrite(pin, value);
+      };
+
+      Spark.prototype.pinVal = function(value) {
+        var v;
+        if (value === 1) {
+          v = "HIGH";
+        } else {
+          v = "LOW";
+        }
+        return v;
       };
 
       return Spark;
