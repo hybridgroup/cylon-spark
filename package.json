@@ -1,6 +1,6 @@
 {
   "name": "cylon-spark",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/cylon-spark.js",
   "description": "Cylon adaptor for the Spark core device",
   "homepage": "http://cylonjs.com",
