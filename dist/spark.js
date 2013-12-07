@@ -87,11 +87,11 @@
       };
 
       Spark.prototype.pwmWrite = function(pin, value) {
-        return analogWrite(pin, value);
+        return this.analogWrite(pin, value);
       };
 
       Spark.prototype.servoWrite = function(pin, value) {
-        return analogWrite(pin, value);
+        return this.analogWrite(pin, value);
       };
 
       Spark.prototype.pinVal = function(value) {
