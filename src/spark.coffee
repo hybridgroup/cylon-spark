@@ -49,10 +49,10 @@ namespace "Cylon.Adaptor", ->
                    data: { access_token: @accessToken, params: "#{pin},#{this.pinVal(value)}"}
 
     pwmWrite: (pin, value) ->
-      analogWrite pin, value
+      @analogWrite pin, value
 
     servoWrite: (pin, value) ->
-      analogWrite pin, value
+      @analogWrite pin, value
 
     pinVal: (value) ->
       if value == 1
