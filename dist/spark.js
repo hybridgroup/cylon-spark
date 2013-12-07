@@ -81,7 +81,7 @@
         return restler.post("https://api.spark.io/v1/devices/" + this.deviceId + "/analogwrite", {
           data: {
             access_token: this.accessToken,
-            params: "" + pin + "," + (this.pinVal(value))
+            params: "" + pin + "," + value
           }
         });
       };
