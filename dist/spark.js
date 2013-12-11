@@ -81,17 +81,17 @@
         return restler.post("https://api.spark.io/v1/devices/" + this.deviceId + "/analogwrite", {
           data: {
             access_token: this.accessToken,
-            params: "" + pin + "," + (this.pinVal(value))
+            params: "" + pin + "," + value
           }
         });
       };
 
       Spark.prototype.pwmWrite = function(pin, value) {
-        return analogWrite(pin, value);
+        return this.analogWrite(pin, value);
       };
 
       Spark.prototype.servoWrite = function(pin, value) {
-        return analogWrite(pin, value);
+        return this.analogWrite(pin, value);
       };
 
       Spark.prototype.pinVal = function(value) {

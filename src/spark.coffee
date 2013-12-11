@@ -46,13 +46,13 @@ namespace "Cylon.Adaptor", ->
 
     analogWrite: (pin, value) =>
       restler.post "https://api.spark.io/v1/devices/#{@deviceId}/analogwrite",
-                   data: { access_token: @accessToken, params: "#{pin},#{this.pinVal(value)}"}
+                   data: { access_token: @accessToken, params: "#{pin},#{value}"}
 
     pwmWrite: (pin, value) ->
-      analogWrite pin, value
+      @analogWrite pin, value
 
     servoWrite: (pin, value) ->
-      analogWrite pin, value
+      @analogWrite pin, value
 
     pinVal: (value) ->
       if value == 1
