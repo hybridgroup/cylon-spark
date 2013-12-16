@@ -2,7 +2,7 @@
   'use strict';
   source('spark');
 
-  describe('Cylon.Spark.Adaptor', function() {
+  describe('Cylon.Adaptors.Spark', function() {
     return it('needs test coverage');
   });
 

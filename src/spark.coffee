@@ -11,32 +11,23 @@
 restler = require('restler')
 namespace = require 'node-namespace'
 
-namespace "Cylon.Adaptor", ->
-  class @Spark extends Cylon.Basestar
-    constructor: (opts) ->
+namespace "Cylon.Adaptors", ->
+  class @Spark extends Cylon.Adaptors.Adaptor
+    constructor: (opts={}) ->
       super
-      @connection = opts.connection
-      @name = opts.name
-      @deviceId = opts.extraParams.deviceId
-      @accessToken = opts.extraParams.accessToken
-      @myself = this
+      extraParams = opts.extraParams or {}
+      @deviceId = extraParams.deviceId
+      @accessToken = extraParams.accessToken
 
     commands: ->
       ['digitalRead', 'digitalWrite', 'analogRead', 'analogWrite', 'pwmWrite', 'servoWrite']
-
-    connect: (callback) ->
-      Logger.debug "Connecting to Spark '#{@name}'..."
-      (callback)(null)
-      @connection.emit 'connect'
-    disconnect: ->
-      Logger.debug "Disconnecting from Spark '#{@name}'..."
 
     digitalRead: (pin, callback) ->
       restler.get "https://api.spark.io/v1/devices/#{@deviceId}/digitalread", data: { access_token: @accessToken, params: pin } .on 'complete', (data) ->
         (callback)(data)
 
     digitalWrite: (pin, value) ->
-      restler.post "https://api.spark.io/v1/devices/#{@deviceId}/digitalwrite",data: { access_token: @accessToken, params: "#{pin},#{this.pinVal(value)}"}
+      restler.post "https://api.spark.io/v1/devices/#{@deviceId}/digitalwrite", data: { access_token: @accessToken, params: "#{pin},#{this.pinVal(value)}"}
 
     analogRead: (pin, callback) ->
       restler.get "https://api.spark.io/v1/devices/#{@deviceId}/analogread",

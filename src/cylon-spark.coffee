@@ -8,6 +8,7 @@
 
 'use strict';
 
+require "cylon"
 require "./spark"
 GPIO = require "cylon-gpio"
 

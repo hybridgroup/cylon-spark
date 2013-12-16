@@ -12,6 +12,8 @@
   var GPIO,
     __slice = [].slice;
 
+  require("cylon");
+
   require("./spark");
 
   GPIO = require("cylon-gpio");

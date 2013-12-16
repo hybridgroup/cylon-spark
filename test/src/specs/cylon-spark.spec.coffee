@@ -1,11 +1,5 @@
 'use strict';
 
-# Needed so that tests don't implode
-namespace = require 'node-namespace'
-namespace 'Cylon', ->
-  class @Basestar
-    constructor: ->
-
 spark = source("cylon-spark")
 
 describe "basic tests", ->
@@ -35,8 +29,8 @@ describe "basic tests", ->
     # hard equal
     data[0].should.be.equal obj
 
-  it "should be able to register", ->
+  it "can register", ->
     spark.register.should.be.a 'function'
 
-  it "should be able to create adaptor", ->
+  it "can create an adaptor", ->
     spark.adaptor.should.be.a 'function'
