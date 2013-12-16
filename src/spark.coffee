@@ -8,11 +8,12 @@
 
 'use strict';
 
+require './cylon-spark'
 restler = require('restler')
 namespace = require 'node-namespace'
 
 namespace "Cylon.Adaptors", ->
-  class @Spark extends Cylon.Adaptors.Adaptor
+  class @Spark extends Cylon.Adaptor
     constructor: (opts={}) ->
       super
       extraParams = opts.extraParams or {}

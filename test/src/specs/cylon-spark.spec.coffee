@@ -2,7 +2,7 @@
 
 spark = source("cylon-spark")
 
-describe "basic tests", ->
+describe "Cylon.Spark", ->
   it "standard async test", (done) ->
     bool = false
     bool.should.be.false

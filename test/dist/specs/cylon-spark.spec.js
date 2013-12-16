@@ -4,7 +4,7 @@
 
   spark = source("cylon-spark");
 
-  describe("basic tests", function() {
+  describe("Cylon.Spark", function() {
     it("standard async test", function(done) {
       var bool;
       bool = false;
