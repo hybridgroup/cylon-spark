@@ -2,5 +2,5 @@
 
 source 'spark'
 
-describe 'Cylon.Spark.Adaptor', ->
+describe 'Cylon.Adaptors.Spark', ->
   it 'needs test coverage'

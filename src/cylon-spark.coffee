@@ -8,12 +8,13 @@
 
 'use strict';
 
+require "cylon"
 require "./spark"
 GPIO = require "cylon-gpio"
 
 module.exports =
   adaptor: (args...) ->
-    new Cylon.Adaptor.Spark(args...)
+    new Cylon.Adaptors.Spark(args...)
 
   driver: (args...) ->
     GPIO.driver(args...)

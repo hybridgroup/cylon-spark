@@ -14,36 +14,30 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+  require('./cylon-spark');
+
   restler = require('restler');
 
   namespace = require('node-namespace');
 
-  namespace("Cylon.Adaptor", function() {
+  namespace("Cylon.Adaptors", function() {
     return this.Spark = (function(_super) {
       __extends(Spark, _super);
 
       function Spark(opts) {
+        var extraParams;
+        if (opts == null) {
+          opts = {};
+        }
         this.analogWrite = __bind(this.analogWrite, this);
         Spark.__super__.constructor.apply(this, arguments);
-        this.connection = opts.connection;
-        this.name = opts.name;
-        this.deviceId = opts.extraParams.deviceId;
-        this.accessToken = opts.extraParams.accessToken;
-        this.myself = this;
+        extraParams = opts.extraParams || {};
+        this.deviceId = extraParams.deviceId;
+        this.accessToken = extraParams.accessToken;
       }
 
       Spark.prototype.commands = function() {
         return ['digitalRead', 'digitalWrite', 'analogRead', 'analogWrite', 'pwmWrite', 'servoWrite'];
-      };
-
-      Spark.prototype.connect = function(callback) {
-        Logger.debug("Connecting to Spark '" + this.name + "'...");
-        callback(null);
-        return this.connection.emit('connect');
-      };
-
-      Spark.prototype.disconnect = function() {
-        return Logger.debug("Disconnecting from Spark '" + this.name + "'...");
       };
 
       Spark.prototype.digitalRead = function(pin, callback) {
@@ -106,7 +100,7 @@
 
       return Spark;
 
-    })(Cylon.Basestar);
+    })(Cylon.Adaptor);
   });
 
 }).call(this);
