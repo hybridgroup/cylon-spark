@@ -1,6 +1,6 @@
 {
   "name": "cylon-spark",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/cylon-spark.js",
   "description": "Cylon adaptor for the Spark core device",
   "homepage": "http://cylonjs.com",
@@ -37,6 +37,6 @@
     "cylon": ">= 0.8.0"
   },
   "peerDependencies": {
-    "cylon-gpio": ">= 0.6.0"
+    "cylon-gpio": ">= 0.7.0"
   }
 }
