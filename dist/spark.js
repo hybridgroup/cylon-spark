@@ -45,9 +45,9 @@
           data: {
             access_token: this.accessToken,
             params: pin
-          }.on('complete', function(data) {
-            return callback(data);
-          })
+          }
+        }).on('complete', function(data) {
+          return callback(data);
         });
       };
 
@@ -89,13 +89,11 @@
       };
 
       Spark.prototype.pinVal = function(value) {
-        var v;
         if (value === 1) {
-          v = "HIGH";
+          return 'HIGH';
         } else {
-          v = "LOW";
+          return 'LOW';
         }
-        return v;
       };
 
       return Spark;
