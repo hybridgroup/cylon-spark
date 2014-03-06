@@ -21,8 +21,8 @@ var Cylon = require('cylon');
 
 // Initialize the robot
 Cylon.robot({
-  connection: { name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123' },
-  device: {name: 'led', driver: 'led', pin: 'D0'}
+  connection: { name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123', deviceId: '123ABC456' },
+  device: {name: 'led', driver: 'led', pin: 'D0'},
 
   work: function(my) {
     every((1).second(), function() {my.led.toggle()});
@@ -37,7 +37,7 @@ Cylon = require('cylon')
 # Initialize the robot
 Cylon.robot
   connection:
-    name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123'
+    name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123', deviceId: '123ABC456'
 
   device:
     name: 'led', driver: 'led', pin: 'D0'
