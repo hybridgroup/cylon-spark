@@ -30,6 +30,6 @@
     "node-namespace": "~1.0.0",
     "cylon": ">= 0.11.0",
     "cylon-gpio": ">= 0.10.0",
-    "eventsource": "^0.1.0"
+    "eventsource": "~0.1.0"
   }
 }
