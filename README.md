@@ -11,7 +11,31 @@ Want to use the Go programming language to power your robots? Check out our sist
 [![Build Status](https://secure.travis-ci.org/hybridgroup/cylon-spark.png?branch=master)](http://travis-ci.org/hybridgroup/cylon-spark)
 
 ## Getting Started
+
 Install the module with: `npm install cylon-spark`
+
+## Commands
+
+#### Upload
+
+    $ cylon spark upload [access_token] [device_id] new_firmware.cpp
+
+The `cylon spark upload` command can help if you want to upload new source code
+to your Spark Core.
+
+For more information on how to program your Spark, please see [Spark's
+examples](http://docs.spark.io/#/examples).
+
+You'll need your `access_token` and `device_id` to push new software to your
+Spark, and you can get both of these from Spark's [Build
+tool](https://spark.io/build).
+
+- **access_token:** In the Build tool, click on the Settings cog in the
+  bottom-left corner to find your access token.
+- **device_id:** After you have your Spark Core registered to your account
+  through the Tinker app, click on the Cores section (just above the Settings
+  cog) on the Build tool. Then, click on the arrow next to your core's name to
+  get its device ID.
 
 ## Examples
 
