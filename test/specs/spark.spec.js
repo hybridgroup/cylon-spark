@@ -157,9 +157,9 @@ describe("Cylon.Adaptors.Spark", function() {
     it("requests the value of a digital pin from the Spark Core API", function() {
       stub(rest, 'get').returns({ once: spy() });
 
-      var params = { data: { access_token: "access_token", params: 4 } };
+      var params = { data: { access_token: "access_token", params: 'd4' } };
 
-      spark.digitalRead(4, spy());
+      spark.digitalRead('d4', spy());
       expect(rest.get).to.be.calledWith(uri, params);
     });
 
@@ -169,7 +169,7 @@ describe("Cylon.Adaptors.Spark", function() {
 
       stub(rest, 'get').returns(response);
 
-      spark.digitalRead(4, callback);
+      spark.digitalRead('d4', callback);
       expect(callback).to.be.calledWith(0);
     });
   });
@@ -190,6 +190,103 @@ describe("Cylon.Adaptors.Spark", function() {
 
       spark.digitalWrite(4, 1);
       expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#analogRead", function() {
+    var uri = deviceUrl + "analogread";
+
+    afterEach(function() {
+      rest.get.restore();
+    });
+
+    it("requests the value of a analog pin from the Spark Core API", function() {
+      stub(rest, 'get').returns({ once: spy() });
+
+      var params = { data: { access_token: "access_token", params: 'a4' } };
+
+      spark.analogRead('a4', spy());
+      expect(rest.get).to.be.calledWith(uri, params);
+    });
+
+    it("calls the callback when it has the value", function() {
+      var response = { once: stub().callsArgWith(1, 0) }
+      var callback = spy();
+
+      stub(rest, 'get').returns(response);
+
+      spark.analogRead(4, callback);
+      expect(callback).to.be.calledWith(0);
+    });
+  });
+
+  describe("#analogWrite", function() {
+    var uri = deviceUrl + "analogwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a analog pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        data: { access_token: "access_token", params: "a4,2.93" }
+      };
+
+      spark.analogWrite('a4', 2.93);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#pwmWrite", function() {
+    var uri = deviceUrl + "analogwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a analog pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        data: { access_token: "access_token", params: "a4,2.93" }
+      };
+
+      spark.pwmWrite('a4', 2.93);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#servoWrite", function() {
+    var uri = deviceUrl + "analogwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a analog pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        data: { access_token: "access_token", params: "a4,2.93" }
+      };
+
+      spark.servoWrite('a4', 2.93);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#pinVal", function() {
+    context("when the pin value is 1", function() {
+      it("returns 'HIGH'", function() {
+        expect(spark.pinVal(1)).to.be.eql("HIGH");
+      });
+    });
+    context("when the pin value is 0", function() {
+      it("returns 'LOW'", function() {
+        expect(spark.pinVal(1)).to.be.eql("HIGH");
+      });
     });
   });
 });
