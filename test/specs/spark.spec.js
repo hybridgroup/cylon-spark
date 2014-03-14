@@ -1,50 +1,303 @@
-(function() {
-  'use strict';
-  source('spark');
+"use strict";
 
-  describe('Cylon.Adaptors.Spark', function() {
-    var spark;
-    spark = new Cylon.Adaptors.Spark;
-    it("exposes a 'commands' method listing Spark commands", function() {
-      var command, _i, _len, _ref, _results;
-      expect(spark.commands()).to.be.a('array');
-      _ref = spark.commands();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        command = _ref[_i];
-        _results.push(expect(command).to.be.a('string'));
+var rest = require('restler');
+
+var adaptor = source("spark");
+
+describe("Cylon.Adaptors.Spark", function() {
+  var spark = new adaptor({
+    extraParams: { deviceId: "device_id", accessToken: "access_token", }
+  });
+
+  var deviceUrl = "https://api.spark.io/v1/devices/device_id/";
+
+  describe("constructor", function() {
+    it("sets @deviceId to the value passed in extraParams", function() {
+      expect(spark.deviceId).to.be.eql("device_id");
+    });
+
+    it("sets @accessToken to the value passed in extraParams", function() {
+      expect(spark.accessToken).to.be.eql("access_token");
+    });
+  });
+
+  describe("#commands", function() {
+    it("returns an array of all Spark commands", function() {
+      var commands = spark.commands();
+      expect(commands).to.be.an('array');
+
+      for (var i = 0; i < commands.length; i++) {
+        expect(commands[i]).to.be.a('string');
       }
-      return _results;
     });
-    it("exposes a digitalRead method to read from a digital pin", function() {
-      return expect(spark.digitalRead).to.be.a('function');
+  });
+
+  describe("#command", function() {
+    var uri = deviceUrl + "testCommand";
+    var response = { once: spy() }
+
+    before(function() {
+      stub(rest, 'post').returns(response);
     });
-    it("exposes a digitalWrite method to write to a digital pin", function() {
-      return expect(spark.digitalWrite).to.be.a('function');
+
+    after(function() {
+      rest.post.restore();
     });
-    it("exposes a analogRead method to read from a analog pin", function() {
-      return expect(spark.analogRead).to.be.a('function');
+
+    it("makes a request to the Spark api to trigger a command", function() {
+      spark.command("testCommand");
+      expect(rest.post).to.be.calledWith(uri);
     });
-    it("exposes a analogWrite method to write to a analog pin", function() {
-      return expect(spark.analogWrite).to.be.a('function');
-    });
-    it("exposes a pwmWrite method to write to a pwm device", function() {
-      return expect(spark.pwmWrite).to.be.a('function');
-    });
-    it("exposes a servoWrite method to write to a servo", function() {
-      return expect(spark.servoWrite).to.be.a('function');
-    });
-    return describe('#pinVal', function() {
-      it("returns 'HIGH' if the value is 1", function() {
-        return expect(spark.pinVal(1)).to.be.eql("HIGH");
+
+    context("with arguments", function() {
+      it("passes the arguments in the request body", function() {
+        var params = {
+          headers: { "Authorization": "Bearer access_token" },
+          data: { args: "arg1,arg2,arg3" }
+        };
+
+        spark.command("testCommand", ["arg1", "arg2", "arg3"]);
+        expect(rest.post).to.be.calledWith(uri, params);
       });
-      it("returns 'LOW' if the value is 0", function() {
-        return expect(spark.pinVal(0)).to.be.eql("LOW");
+    });
+
+    context("with a callback", function() {
+      context("if the API returns an error", function() {
+        var data = { ok: false, error: "Invalid command" }
+        var response = { once: stub().callsArgWith(1, data) }
+
+        before(function() {
+          rest.post.returns(response);
+        });
+
+        it("triggers the callback with the error message", function() {
+          var callback = spy();
+          spark.command("testCommand", [], callback);
+          expect(callback).to.be.calledWith("Invalid command", null);
+        })
       });
-      return it("returns 'LOW' for all other values", function() {
-        return expect(spark.pinVal("invalid")).to.be.eql("LOW");
+
+      context("if the command ran successfully", function() {
+        var data = { return_value: 42 }
+        var response = { once: stub().callsArgWith(1, data) }
+
+        before(function() {
+          rest.post.returns(response);
+        });
+
+        it("triggers the callback with the return value", function() {
+          var callback = spy();
+          spark.command("testCommand", [], callback);
+          expect(callback).to.be.calledWith(null, 42);
+        });
       });
     });
   });
 
-}).call(this);
+  describe("#variable", function() {
+    var uri = deviceUrl + "testVariable";
+
+    it("requests the variable's value from the Spark Core API", function() {
+      stub(rest, 'get').returns({ once: spy() });
+      spark.variable("testVariable");
+      expect(rest.get).to.be.calledWith(uri);
+      rest.get.restore();
+    });
+
+    context("when successful", function() {
+      var data = { result: 42 };
+      var response = { once: stub().callsArgWith(1, data) };
+
+      before(function() {
+        stub(rest, 'get').returns(response);
+      });
+
+      after(function() {
+        rest.get.restore();
+      });
+
+      it("triggers the callback with the value", function() {
+        var callback = spy();
+        spark.variable("testVariable", callback);
+        expect(callback).to.be.calledWith(null, 42);
+      });
+    });
+
+    context("when an error occurs", function() {
+      var data = { ok: false, error: "Invalid variable" };
+      var response = { once: stub().callsArgWith(1, data) };
+
+      before(function() {
+        stub(rest, 'get').returns(response);
+      });
+
+      after(function() {
+        rest.get.restore();
+      });
+
+      it("triggers the callback with the error message", function() {
+        var callback = spy();
+        spark.variable("testVariable", callback);
+        expect(callback).to.be.calledWith("Invalid variable", null);
+      });
+    });
+  });
+
+  describe("#listenForEvents", function() {
+    // TODO, could not figure out satisfactory way to stub out EventSource
+    // constructor for testing.
+  });
+
+  describe("#digitalRead", function() {
+    var uri = deviceUrl + "digitalread";
+
+    afterEach(function() {
+      rest.get.restore();
+    });
+
+    it("requests the value of a digital pin from the Spark Core API", function() {
+      stub(rest, 'get').returns({ once: spy() });
+
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: 'd4' }
+      };
+
+      spark.digitalRead('d4', spy());
+      expect(rest.get).to.be.calledWith(uri, params);
+    });
+
+    it("calls the callback when it has the value", function() {
+      var response = { once: stub().callsArgWith(1, 0) }
+      var callback = spy();
+
+      stub(rest, 'get').returns(response);
+
+      spark.digitalRead('d4', callback);
+      expect(callback).to.be.calledWith(0);
+    });
+  });
+
+  describe("#digitalWrite", function() {
+    var uri = deviceUrl + "digitalwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a digital pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "4,HIGH" }
+      };
+
+      spark.digitalWrite(4, 1);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#analogRead", function() {
+    var uri = deviceUrl + "analogread";
+
+    afterEach(function() {
+      rest.get.restore();
+    });
+
+    it("requests the value of a analog pin from the Spark Core API", function() {
+      stub(rest, 'get').returns({ once: spy() });
+
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: 'a4' }
+      };
+
+      spark.analogRead('a4', spy());
+      expect(rest.get).to.be.calledWith(uri, params);
+    });
+
+    it("calls the callback when it has the value", function() {
+      var response = { once: stub().callsArgWith(1, 0) }
+      var callback = spy();
+
+      stub(rest, 'get').returns(response);
+
+      spark.analogRead(4, callback);
+      expect(callback).to.be.calledWith(0);
+    });
+  });
+
+  describe("#analogWrite", function() {
+    var uri = deviceUrl + "analogwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a analog pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "a4,2.93" }
+      };
+
+      spark.analogWrite('a4', 2.93);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#pwmWrite", function() {
+    var uri = deviceUrl + "analogwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a analog pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "a4,2.93" }
+      };
+
+      spark.pwmWrite('a4', 2.93);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#servoWrite", function() {
+    var uri = deviceUrl + "analogwrite";
+
+    afterEach(function() {
+      rest.post.restore();
+    });
+
+    it("sets the value of a analog pin via the Spark Core API", function() {
+      stub(rest, 'post')
+
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "a4,2.93" }
+      };
+
+      spark.servoWrite('a4', 2.93);
+      expect(rest.post).to.be.calledWith(uri, params);
+    });
+  });
+
+  describe("#pinVal", function() {
+    context("when the pin value is 1", function() {
+      it("returns 'HIGH'", function() {
+        expect(spark.pinVal(1)).to.be.eql("HIGH");
+      });
+    });
+    context("when the pin value is 0", function() {
+      it("returns 'LOW'", function() {
+        expect(spark.pinVal(1)).to.be.eql("HIGH");
+      });
+    });
+  });
+});

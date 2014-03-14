@@ -1,45 +1,72 @@
-(function() {
-  'use strict';
-  var spark;
+"use strict";
 
-  spark = source("cylon-spark");
+var GPIO = require('cylon-gpio');
 
-  describe("Cylon.Spark", function() {
-    it("standard async test", function(done) {
-      var bool;
-      bool = false;
-      bool.should.be["false"];
-      setTimeout(function() {
-        bool.should.be["false"];
-        bool = true;
-        return bool.should.be["true"];
-      });
-      150;
-      setTimeout(function() {
-        bool.should.be["true"];
-        return done();
-      });
-      return 300;
-    });
-    it("standard sync test", function() {
-      var data, obj;
-      data = [];
-      obj = {
-        id: 5,
-        name: 'test'
-      };
-      data.should.be.empty;
-      data.push(obj);
-      data.should.have.length(1);
-      data[0].should.be.eql(obj);
-      return data[0].should.be.equal(obj);
-    });
-    it("can register", function() {
-      return spark.register.should.be.a('function');
-    });
-    return it("can create an adaptor", function() {
-      return spark.adaptor.should.be.a('function');
+var module = source("cylon-spark");
+
+describe("Cylon.Spark", function() {
+  describe("adaptor", function() {
+    it("generates a new Spark adaptor with the provided arguments", function() {
+      var adaptor = module.adaptor({name: "New Adaptor" });
+      expect(adaptor.name).to.be.eql("New Adaptor");
+      expect(adaptor.commands).to.be.a('function');
     });
   });
 
-}).call(this);
+  describe("driver", function() {
+    before(function() {
+      stub(GPIO, 'driver').returns({});
+    });
+
+    after(function() {
+      GPIO.driver.restore();
+    });
+
+    it("creates a driver through the GPIO module", function() {
+      var params = { name: 'led' };
+      module.driver(params);
+      expect(GPIO.driver).to.be.calledOnce;
+    });
+  });
+
+  describe("register", function() {
+    var bot = { registerAdaptor: spy() };
+
+    before(function() {
+      stub(GPIO, 'register').returns();
+      module.register(bot);
+    });
+
+    after(function() {
+      GPIO.register.restore();
+    });
+
+    it("registers the Spark adaptor", function() {
+      expect(bot.registerAdaptor).to.be.calledWith("cylon-spark", "spark");
+    });
+
+    it("tells GPIO to register itself", function() {
+      expect(GPIO.register).to.be.calledWith(bot);
+    });
+  });
+
+  describe("#registerCommands", function() {
+    var commands = module.registerCommands();
+
+    it("registers a 'spark' command", function() {
+      expect(commands.spark).to.be.a('object');
+    });
+
+    describe("spark", function() {
+      var spark = commands.spark;
+
+      it("has a description", function() {
+        expect(spark.description).to.be.a('string');
+      });
+
+      it("provides a command", function() {
+        expect(spark.command).to.be.a('function');
+      });
+    });
+  });
+});
