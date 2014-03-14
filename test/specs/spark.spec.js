@@ -52,7 +52,8 @@ describe("Cylon.Adaptors.Spark", function() {
     context("with arguments", function() {
       it("passes the arguments in the request body", function() {
         var params = {
-          data: { access_token: "access_token", args: "arg1,arg2,arg3" }
+          headers: { "Authorization": "Bearer access_token" },
+          data: { args: "arg1,arg2,arg3" }
         };
 
         spark.command("testCommand", ["arg1", "arg2", "arg3"]);
@@ -157,7 +158,10 @@ describe("Cylon.Adaptors.Spark", function() {
     it("requests the value of a digital pin from the Spark Core API", function() {
       stub(rest, 'get').returns({ once: spy() });
 
-      var params = { data: { access_token: "access_token", params: 'd4' } };
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: 'd4' }
+      };
 
       spark.digitalRead('d4', spy());
       expect(rest.get).to.be.calledWith(uri, params);
@@ -185,7 +189,8 @@ describe("Cylon.Adaptors.Spark", function() {
       stub(rest, 'post')
 
       var params = {
-        data: { access_token: "access_token", params: "4,HIGH" }
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "4,HIGH" }
       };
 
       spark.digitalWrite(4, 1);
@@ -203,7 +208,10 @@ describe("Cylon.Adaptors.Spark", function() {
     it("requests the value of a analog pin from the Spark Core API", function() {
       stub(rest, 'get').returns({ once: spy() });
 
-      var params = { data: { access_token: "access_token", params: 'a4' } };
+      var params = {
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: 'a4' }
+      };
 
       spark.analogRead('a4', spy());
       expect(rest.get).to.be.calledWith(uri, params);
@@ -231,7 +239,8 @@ describe("Cylon.Adaptors.Spark", function() {
       stub(rest, 'post')
 
       var params = {
-        data: { access_token: "access_token", params: "a4,2.93" }
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "a4,2.93" }
       };
 
       spark.analogWrite('a4', 2.93);
@@ -250,7 +259,8 @@ describe("Cylon.Adaptors.Spark", function() {
       stub(rest, 'post')
 
       var params = {
-        data: { access_token: "access_token", params: "a4,2.93" }
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "a4,2.93" }
       };
 
       spark.pwmWrite('a4', 2.93);
@@ -269,7 +279,8 @@ describe("Cylon.Adaptors.Spark", function() {
       stub(rest, 'post')
 
       var params = {
-        data: { access_token: "access_token", params: "a4,2.93" }
+        headers: { "Authorization": "Bearer access_token" },
+        data: { params: "a4,2.93" }
       };
 
       spark.servoWrite('a4', 2.93);
