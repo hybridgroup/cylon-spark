@@ -21,3 +21,25 @@ With that done, we can begin to setup our robot:
 
 Our robot has one connection, which we'll call `spark`. It uses the Spark
 adaptor, and has our Spark access token and the device id from our core:
+
+      connection:
+        name: 'spark'
+        adaptor: 'spark'
+        accessToken: '[YOUR_ACCESS_TOKEN]'
+        deviceId: '[YOUR_DEVICE_ID]'
+
+For our robot's work, we're going to tell it to execute the `fortyTwo` function
+on our Spark every five seconds, and print the return value the function returns.
+
+      work: (my) ->
+        every 5.seconds(), ->
+          my.spark.command 'fortyTwo', [], (err, data) ->
+            if err
+              console.log "An error occured!", err
+            else
+              console.log "The magic number is:", data
+
+With our connection to the Spark and work defined, all that's left is to tell
+the robot to start:
+
+    .start()
