@@ -6,6 +6,9 @@
   * $ cylon spark upload [access_token] [device_id] ./path/to/functions.cpp
   */
 
+// for random number generation
+#include <cstdlib>
+
 // need this to use the Spark variable
 #include "application.h"
 
@@ -14,4 +17,11 @@ int randomNumber = 4;
 void setup()
 {
     Spark.variable("randomNumber", &randomNumber, INT);
+}
+
+void loop()
+{
+    // gives us a random number between 1-100
+    randomNumber = rand() % 100 + 1;
+    delay(3000);
 }
