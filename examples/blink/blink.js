@@ -4,8 +4,8 @@ Cylon.robot({
   connection: {
     name: 'spark',
     adaptor: 'spark',
-    deviceId: '',
-    accessToken: ''
+    accessToken: '[YOUR_ACCESS_TOKEN]',
+    deviceId: '[YOUR_DEVICE_ID]'
   },
 
   device: {

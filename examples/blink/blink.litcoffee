@@ -4,6 +4,13 @@ For this example, we're going to connect to a Spark Core and make the LED on
 pin D7 blink on a 1-second interval. Before we start, make sure you've got the
 `cylon-spark` module installed.
 
+Additionally, you'll need the Tinker firmware running on your Spark Core. If
+you've set your Spark Core up with the Tinker app, you should still have Tinker
+on your Core. Otherwise, load [the
+firmware](https://github.com/spark/core-firmware/blob/master/src/application.cpp)
+up via Spark's [Build](https://www.spark.io/build/) tool, or with the provided
+`cylon spark upload` command.
+
 First, let's make sure to load the Cylon module:
 
     Cylon = require 'cylon'
@@ -17,7 +24,10 @@ previously-mentioned `cylon-spark` module. We'll also have one device, the LED
 on pin D7.
 
       connection:
-        name: 'spark', adaptor: 'spark', deviceId: '', accessToken: ''
+        name: 'spark'
+        adaptor: 'spark'
+        accessToken: '[YOUR_ACCESS_TOKEN]'
+        deviceId: '[YOUR_DEVICE_ID]'
 
       device:
         name: 'led', driver: 'led', pin: 'D7'
