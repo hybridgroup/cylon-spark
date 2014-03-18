@@ -11,6 +11,8 @@ README: [https://github.com/hybridgroup/cylon-spark#upload]()
 Either way, upload [this script][script] to your Spark Core before you get
 started.
 
+[script]: https://github.com/hybridgroup/cylon-spark/blob/master/examples/functions/functions.cpp
+
 To begin, let's load up Cylon:
 
     Cylon = require 'cylon'
