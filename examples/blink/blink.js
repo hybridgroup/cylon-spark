@@ -1,4 +1,4 @@
-var Cylon = require('../..');
+var Cylon = require('cylon');
 
 Cylon.robot({
   connection: {
