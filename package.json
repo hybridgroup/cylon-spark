@@ -26,7 +26,7 @@
     "sinon": "~1.7.3"
   },
   "dependencies": {
-    "restler": "~2.0.1",
+    "restler": "~3.2.0",
     "node-namespace": "~1.0.0",
     "cylon": ">= 0.11.2",
     "cylon-gpio": ">= 0.10.0",
