@@ -49,24 +49,4 @@ describe("Cylon.Spark", function() {
       expect(GPIO.register).to.be.calledWith(bot);
     });
   });
-
-  describe("#registerCommands", function() {
-    var commands = module.registerCommands();
-
-    it("registers a 'spark' command", function() {
-      expect(commands.spark).to.be.a('object');
-    });
-
-    describe("spark", function() {
-      var spark = commands.spark;
-
-      it("has a description", function() {
-        expect(spark.description).to.be.a('string');
-      });
-
-      it("provides a command", function() {
-        expect(spark.command).to.be.a('function');
-      });
-    });
-  });
 });
