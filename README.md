@@ -93,6 +93,8 @@ Thank you!
 
 ## Release History
 
+Version 0.7.0 - Release for cylon 0.12.0
+
 Version 0.6.0 - Release for cylon 0.11.2, Add support for server side events, user defined functions, variables and a firmware upload cli command
 
 Version 0.5.0 - Release for cylon 0.11.0, refactor into pure JavaScript
