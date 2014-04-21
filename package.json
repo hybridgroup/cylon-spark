@@ -5,31 +5,28 @@
   "description": "Cylon adaptor for the Spark core device",
   "homepage": "http://cylonjs.com",
   "bugs": "https://github.com/hybridgroup/cylon-spark/issues",
-  "author": {
-    "name": "The Hybrid Group",
-    "email": "cylonjs@hybridgroup.com",
-    "url": "http://hybridgroup.com"
-  },
+
+  "author": "The Hybrid Group <cylonjs@hybridgroup.com>",
+
   "repository": {
     "type": "git",
     "url": "https://github.com/hybridgroup/cylon-spark"
   },
-  "licenses": [
-    {
-      "type": "Apache 2.0"
-    }
-  ],
+
+  "license": "Apache 2.0",
+
   "devDependencies": {
     "sinon-chai": "~2.5.0",
-    "chai": "~1.9.1",
-    "mocha": "~1.18.2",
-    "sinon": "~1.9.0"
+    "chai":       "~1.9.1",
+    "mocha":      "~1.18.2",
+    "sinon":      "~1.9.0"
   },
+
   "dependencies": {
-    "restler": "~3.2.0",
+    "restler":        "~3.2.0",
     "node-namespace": "~1.0.0",
-    "cylon": ">= 0.12.0",
-    "cylon-gpio": ">= 0.12.0",
-    "eventsource": "~0.1.0"
+    "cylon":          ">= 0.12.0",
+    "cylon-gpio":     ">= 0.12.0",
+    "eventsource":    "~0.1.0"
   }
 }
