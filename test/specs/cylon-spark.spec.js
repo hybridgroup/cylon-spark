@@ -3,15 +3,21 @@
 var GPIO = require('cylon-gpio');
 
 var Spark = source('spark');
+var VoodooSpark = source('voodoospark');
 
 var module = source("cylon-spark");
 
 describe("Cylon.Spark", function() {
   describe("adaptor", function() {
     it("generates a new Spark adaptor with the provided arguments", function() {
-      var adaptor = module.adaptor({name: "New Adaptor" });
+      var adaptor = module.adaptor({name: "spark" });
       expect(adaptor).to.be.an.instanceOf(Spark);
     });
+
+    it("generates a new VoodooSpark adaptor with the provided arguments", function() {
+      var adaptor = module.adaptor({name: "voodoospark" });
+      expect(adaptor).to.be.an.instanceOf(VoodooSpark);
+    });    
   });
 
   describe("driver", function() {
