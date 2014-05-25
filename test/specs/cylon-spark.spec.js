@@ -2,14 +2,15 @@
 
 var GPIO = require('cylon-gpio');
 
+var Spark = source('spark');
+
 var module = source("cylon-spark");
 
 describe("Cylon.Spark", function() {
   describe("adaptor", function() {
     it("generates a new Spark adaptor with the provided arguments", function() {
       var adaptor = module.adaptor({name: "New Adaptor" });
-      expect(adaptor.name).to.be.eql("New Adaptor");
-      expect(adaptor.commands).to.be.a('function');
+      expect(adaptor).to.be.an.instanceOf(Spark);
     });
   });
 
