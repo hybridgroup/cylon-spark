@@ -2,7 +2,7 @@
 
 Cylon.js (http://cylonjs.com) is a JavaScript framework for robotics and physical computing using Node.js
 
-This module provides an adaptor for the Spark core device using the built-in Tinker protocol (https://www.spark.io/).
+This module provides an adaptor for the Spark core device using either the built-in Tinker protocol (https://www.spark.io/), or else [VoodooSpark](https://github.com/voodootikigod/voodoospark) from [@voodootikigod](https://github.com/voodootikigod). The VoodooSpark implementation uses the [Spark-IO](https://github.com/rwaldron/spark-io) node module from [@rwaldron](https://github.com/rwaldron/). Thank you! 
 
 Want to use Ruby on robots? Check out our sister project Artoo (http://artoo.io)
 
@@ -13,18 +13,6 @@ Want to use the Go programming language to power your robots? Check out our sist
 ## Getting Started
 
 Install the module with: `npm install cylon-spark`
-
-## Commands
-
-#### Upload
-
-    $ cylon spark upload [access_token] [device_id] new_firmware.cpp
-
-The `cylon spark upload` command can help if you want to upload new source code
-to your Spark Core.
-
-For more information on how to program your Spark, please see [Spark's
-examples](http://docs.spark.io/#/examples).
 
 You'll need your `access_token` and `device_id` to push new software to your
 Spark, and you can get both of these from Spark's [Build
@@ -37,9 +25,17 @@ tool](https://spark.io/build).
   cog) on the Build tool. Then, click on the arrow next to your core's name to
   get its device ID.
 
+## Installing Firmware On Your Spark Core
+
+You will need to install the appropriate firmware on your Spark Core to use it from Cylon.js. 
+
+One option is to use the Tinker software, which has the same API as the "default.cpp" code that is included with the Gort CLI (http://gort.io). This routes all of your calls thru the Spark cloud, with is appropriate for communicating with Spark devices in a remote location.
+
+Another option is to use the VoodooSpark firmware, which has its own binary API. This discovers your device thru the Spark cloud, and then routes all of your calls directly to the Spark Core device. This is appropriate for communicating with Spark devices on the same local subnet as the computer that you wish to control them from.
+
 ## Examples
 
-### JavaScript:
+### Spark using Tinker API:
 ```javascript
 var Cylon = require('cylon');
 
@@ -53,23 +49,19 @@ Cylon.robot({
   }
 }).start();
 ```
+### Spark using VoodooSpark API:
+```javascript
+var Cylon = require('cylon');
 
-### CoffeeScript:
-```
-Cylon = require('cylon')
+// Initialize the robot
+Cylon.robot({
+  connection: { name: 'voodoospark', adaptor: 'voodoospark', accessToken: 'XYZPDQ123', deviceId: '123ABC456', module: 'spark' },
+  device: {name: 'led', driver: 'led', pin: 'D0'},
 
-# Initialize the robot
-Cylon.robot
-  connection:
-    name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123', deviceId: '123ABC456'
-
-  device:
-    name: 'led', driver: 'led', pin: 'D0'
-
-  work: (my) ->
-    every 1.second(), -> my.led.toggle()
-
-.start()
+  work: function(my) {
+    every((1).second(), function() {my.led.toggle()});
+  }
+}).start();
 ```
 
 ## Documentation
