@@ -5,7 +5,8 @@ Cylon.robot({
     name: 'voodoospark',
     adaptor: 'voodoospark',
     accessToken: '[YOUR_ACCESS_TOKEN]',
-    deviceId: '[YOUR_DEVICE_ID]'
+    deviceId: '[YOUR_DEVICE_ID]',
+    module: 'spark'
   },
 
   device: {
