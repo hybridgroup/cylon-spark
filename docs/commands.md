@@ -52,7 +52,7 @@ Writes a value using analog write to a pin.
 
 `null`
 
-## pwmWrite
+## pwmWrite()
 
 Writes the pwm value.(analogWrite)
 
@@ -60,7 +60,7 @@ Writes the pwm value.(analogWrite)
 
 `null`
 
-## servoWrite
+## servoWrite()
 
 Writes the servo value.(analogWrite)
 
