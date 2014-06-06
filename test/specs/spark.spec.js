@@ -152,11 +152,11 @@ describe("Cylon.Adaptors.Spark", function() {
     var uri = deviceUrl + "digitalread";
 
     afterEach(function() {
-      rest.get.restore();
+      rest.post.restore();
     });
 
     it("requests the value of a digital pin from the Spark Core API", function() {
-      stub(rest, 'get').returns({ once: spy() });
+      stub(rest, 'post').returns({ once: spy() });
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
@@ -164,14 +164,14 @@ describe("Cylon.Adaptors.Spark", function() {
       };
 
       spark.digitalRead('d4', spy());
-      expect(rest.get).to.be.calledWith(uri, params);
+      expect(rest.post).to.be.calledWith(uri, params);
     });
 
     it("calls the callback when it has the value", function() {
       var response = { once: stub().callsArgWith(1, 0) }
       var callback = spy();
 
-      stub(rest, 'get').returns(response);
+      stub(rest, 'post').returns(response);
 
       spark.digitalRead('d4', callback);
       expect(callback).to.be.calledWith(0);
@@ -202,11 +202,11 @@ describe("Cylon.Adaptors.Spark", function() {
     var uri = deviceUrl + "analogread";
 
     afterEach(function() {
-      rest.get.restore();
+      rest.post.restore();
     });
 
     it("requests the value of a analog pin from the Spark Core API", function() {
-      stub(rest, 'get').returns({ once: spy() });
+      stub(rest, 'post').returns({ once: spy() });
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
@@ -214,14 +214,14 @@ describe("Cylon.Adaptors.Spark", function() {
       };
 
       spark.analogRead('a4', spy());
-      expect(rest.get).to.be.calledWith(uri, params);
+      expect(rest.post).to.be.calledWith(uri, params);
     });
 
     it("calls the callback when it has the value", function() {
       var response = { once: stub().callsArgWith(1, 0) }
       var callback = spy();
 
-      stub(rest, 'get').returns(response);
+      stub(rest, 'post').returns(response);
 
       spark.analogRead(4, callback);
       expect(callback).to.be.calledWith(0);
