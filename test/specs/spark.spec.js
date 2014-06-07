@@ -19,6 +19,10 @@ describe("Cylon.Adaptors.Spark", function() {
     it("sets @accessToken to the value passed in extraParams", function() {
       expect(spark.accessToken).to.be.eql("access_token");
     });
+
+    it("sets @readInterval to 2000 by default", function() {
+      expect(spark.readInterval).to.be.eql(2000);
+    });
   });
 
   describe("#commands", function() {
