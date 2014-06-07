@@ -181,14 +181,15 @@ describe("Cylon.Adaptors.Spark", function() {
     });
 
     it("calls the callback when it has the value", function() {
-      var response = { once: stub().callsArgWith(1, 0) }
+      var value = { return_value: 1 };
+      var response = { once: stub().callsArgWith(1, value) };
       var callback = spy();
 
       stub(rest, 'post').returns(response);
 
       spark.digitalRead('d4', callback);
       clock.tick(2050);
-      expect(callback).to.be.calledWith(0);
+      expect(callback).to.be.calledWith(1);
     });
   });
 
@@ -239,14 +240,15 @@ describe("Cylon.Adaptors.Spark", function() {
     });
 
     it("calls the callback when it has the value", function() {
-      var response = { once: stub().callsArgWith(1, 0) }
+      var value = { return_value: 1027 };
+      var response = { once: stub().callsArgWith(1, value) };
       var callback = spy();
 
       stub(rest, 'post').returns(response);
 
       spark.analogRead(4, callback);
       clock.tick(2050);
-      expect(callback).to.be.calledWith(0);
+      expect(callback).to.be.calledWith(1027);
     });
   });
 
