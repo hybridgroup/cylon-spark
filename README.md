@@ -85,6 +85,8 @@ Thank you!
 
 ## Release History
 
+Version 0.10.0 - Alter {analog,digital}Read to act more like Firmata, trigger callback repeatedly.
+
 Version 0.9.0 - Correct implementation with Tinker firmware read calls
 
 Version 0.8.0 - Compatibility with Cylon 0.14.0, remove node-namespace.
