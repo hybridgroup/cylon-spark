@@ -149,13 +149,19 @@ describe("Cylon.Adaptors.Spark", function() {
   });
 
   describe("#digitalRead", function() {
-    var uri = deviceUrl + "digitalread";
+    var clock,
+        uri = deviceUrl + "digitalread";
+
+    beforeEach(function() {
+      clock = sinon.useFakeTimers();
+    });
 
     afterEach(function() {
+      clock.restore();
       rest.post.restore();
     });
 
-    it("requests the value of a digital pin from the Spark Core API", function() {
+    it("requests the value of a digital pin from the Spark Core API every 2 seconds", function() {
       stub(rest, 'post').returns({ once: spy() });
 
       var params = {
@@ -164,7 +170,10 @@ describe("Cylon.Adaptors.Spark", function() {
       };
 
       spark.digitalRead('d4', spy());
+
+      clock.tick(2050);
       expect(rest.post).to.be.calledWith(uri, params);
+      expect(rest.post).to.be.calledOnce;
     });
 
     it("calls the callback when it has the value", function() {
@@ -174,6 +183,7 @@ describe("Cylon.Adaptors.Spark", function() {
       stub(rest, 'post').returns(response);
 
       spark.digitalRead('d4', callback);
+      clock.tick(2050);
       expect(callback).to.be.calledWith(0);
     });
   });
@@ -199,13 +209,19 @@ describe("Cylon.Adaptors.Spark", function() {
   });
 
   describe("#analogRead", function() {
-    var uri = deviceUrl + "analogread";
+    var clock,
+        uri = deviceUrl + "analogread";
+
+    beforeEach(function() {
+      clock = sinon.useFakeTimers();
+    });
 
     afterEach(function() {
       rest.post.restore();
+      clock.restore();
     });
 
-    it("requests the value of a analog pin from the Spark Core API", function() {
+    it("requests the value of a analog pin from the Spark Core API every 2 seconds", function() {
       stub(rest, 'post').returns({ once: spy() });
 
       var params = {
@@ -214,6 +230,7 @@ describe("Cylon.Adaptors.Spark", function() {
       };
 
       spark.analogRead('a4', spy());
+      clock.tick(2050);
       expect(rest.post).to.be.calledWith(uri, params);
     });
 
@@ -224,6 +241,7 @@ describe("Cylon.Adaptors.Spark", function() {
       stub(rest, 'post').returns(response);
 
       spark.analogRead(4, callback);
+      clock.tick(2050);
       expect(callback).to.be.calledWith(0);
     });
   });
