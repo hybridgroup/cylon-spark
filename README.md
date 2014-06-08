@@ -85,6 +85,8 @@ Thank you!
 
 ## Release History
 
+Version 0.11.0 - Spark analog/digital Read now returns return_value directly, with a configurable read interval.
+
 Version 0.10.0 - Alter {analog,digital}Read to act more like Firmata, trigger callback repeatedly.
 
 Version 0.9.0 - Correct implementation with Tinker firmware read calls
