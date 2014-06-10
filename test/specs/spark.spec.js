@@ -27,7 +27,7 @@ describe("Cylon.Adaptors.Spark", function() {
 
   describe("#commands", function() {
     it("returns an array of all Spark commands", function() {
-      var commands = spark.commands();
+      var commands = spark.commands;
       expect(commands).to.be.an('array');
 
       for (var i = 0; i < commands.length; i++) {
