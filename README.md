@@ -85,6 +85,8 @@ Thank you!
 
 ## Release History
 
+Version 0.12.1 - Add peerDependencies to package.json
+
 Version 0.12.0 - Compatibility with Cylon 0.15.0
 
 Version 0.11.0 - Spark analog/digital Read now returns return_value directly, with a configurable read interval.
