@@ -29,6 +29,8 @@
 
   "dependencies": {
     "restler":     "~3.2.0",
+    "cylon":       "~0.15.0",
+    "cylon-gpio":  "~0.15.0",
     "eventsource": "~0.1.0",
     "spark-io":    ">= 0.3.9"
   }
