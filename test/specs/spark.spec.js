@@ -284,7 +284,7 @@ describe("Cylon.Adaptors.Spark", function() {
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
-        data: { params: "a4,2.93" }
+        data: { params: "a4,255" }
       };
 
       spark.pwmWrite('a4', 2.93);
@@ -304,7 +304,7 @@ describe("Cylon.Adaptors.Spark", function() {
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
-        data: { params: "a4,2.93" }
+        data: { params: "a4,63.75" }
       };
 
       spark.servoWrite('a4', 2.93);
