@@ -85,7 +85,9 @@ Thank you!
 
 ## Release History
 
-Version 0.12.1 - Update PWM write functions in adaptor.
+Version 0.13.0 - Compatibility with Cylon 0.16.0
+
+Version 0.12.2 - Update PWM write functions in adaptor.
 
 Version 0.12.1 - Add peerDependencies to package.json
 
