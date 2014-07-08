@@ -23,8 +23,8 @@
   },
 
   "peerDependencies": {
-    "cylon":      ">= 0.15.0 < 1",
-    "cylon-gpio": ">= 0.15.0 < 1"
+    "cylon":       ">= 0.15.0 < 1",
+    "cylon-gpio":  ">= 0.15.0 < 1"
   },
 
   "dependencies": {
