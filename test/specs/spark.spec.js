@@ -264,7 +264,7 @@ describe("Cylon.Adaptors.Spark", function() {
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
-        data: { params: "a4,2.93" }
+        data: { params: "a4,A,2.93" }
       };
 
       spark.analogWrite('a4', 2.93);
@@ -284,10 +284,10 @@ describe("Cylon.Adaptors.Spark", function() {
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
-        data: { params: "a4,255" }
+        data: { params: "a4,A,255" }
       };
 
-      spark.pwmWrite('a4', 2.93);
+      spark.pwmWrite('a4', 2.93, 'A');
       expect(rest.post).to.be.calledWith(uri, params);
     });
   });
@@ -304,10 +304,10 @@ describe("Cylon.Adaptors.Spark", function() {
 
       var params = {
         headers: { "Authorization": "Bearer access_token" },
-        data: { params: "a4,63.75" }
+        data: { params: "a4,S,90" }
       };
 
-      spark.servoWrite('a4', 2.93);
+      spark.servoWrite('a4', 0.5, 'S');
       expect(rest.post).to.be.calledWith(uri, params);
     });
   });
