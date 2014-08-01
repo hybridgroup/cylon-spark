@@ -17,7 +17,7 @@ describe("Cylon.Spark", function() {
     it("generates a new VoodooSpark adaptor with the provided arguments", function() {
       var adaptor = module.adaptor({name: "voodoospark" });
       expect(adaptor).to.be.an.instanceOf(VoodooSpark);
-    });    
+    });
   });
 
   describe("driver", function() {
