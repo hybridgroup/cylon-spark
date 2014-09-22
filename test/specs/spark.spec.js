@@ -4,18 +4,16 @@ var rest = require('restler');
 
 var adaptor = source("spark");
 
-var sparkApi = require('spark');
+var sparkCloud = require('spark');
 
 describe("Cylon.Adaptors.Spark", function() {
-  var spark, mockSparkApi;
+  var spark, sparkApi;
 
   before(function() {
     spark = new adaptor({
       extraParams: { deviceId: "device_id", accessToken: "access_token", }
     });
-    mockSparkApi = sinon.mock(sparkApi);
-
-    sinon.sparkApi = mockSparkApi;
+    sparkApi = sinon.mock(sparkCloud);
   });
 
   describe("constructor", function() {
@@ -27,15 +25,26 @@ describe("Cylon.Adaptors.Spark", function() {
       expect(spark.accessToken).to.be.eql("access_token");
     });
 
-    it("sets @sparkApi to a new instance of spark lib", function() {
-      expect(spark.sparkApi).to.be.eql(mockSparkApi);
-    });
-
     it("sets @readInterval to 2000 by default", function() {
       expect(spark.readInterval).to.be.eql(2000);
     });
 
   });
+
+  describe("#connect", function() {
+    var callback;
+
+    it("should call login and return login info", function() {
+      spy(sparkApi, 'login');
+
+      spark.connect();
+
+      expect(sparkApi.login).to.be.calledOnce;
+
+    });
+  });
+});
+
 /*
   describe("#commands", function() {
     it("returns an array of all Spark commands", function() {
@@ -283,4 +292,3 @@ describe("Cylon.Adaptors.Spark", function() {
     });
   });
  */
-});
