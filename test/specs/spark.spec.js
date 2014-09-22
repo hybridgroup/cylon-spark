@@ -4,12 +4,19 @@ var rest = require('restler');
 
 var adaptor = source("spark");
 
-describe("Cylon.Adaptors.Spark", function() {
-  var spark = new adaptor({
-    extraParams: { deviceId: "device_id", accessToken: "access_token", }
-  });
+var sparkApi = require('spark');
 
-  var deviceUrl = "https://api.spark.io/v1/devices/device_id/";
+describe("Cylon.Adaptors.Spark", function() {
+  var spark, mockSparkApi;
+
+  before(function() {
+    spark = new adaptor({
+      extraParams: { deviceId: "device_id", accessToken: "access_token", }
+    });
+    mockSparkApi = sinon.mock(sparkApi);
+
+    sinon.sparkApi = mockSparkApi;
+  });
 
   describe("constructor", function() {
     it("sets @deviceId to the value passed in extraParams", function() {
@@ -20,11 +27,16 @@ describe("Cylon.Adaptors.Spark", function() {
       expect(spark.accessToken).to.be.eql("access_token");
     });
 
+    it("sets @sparkApi to a new instance of spark lib", function() {
+      expect(spark.sparkApi).to.be.eql(mockSparkApi);
+    });
+
     it("sets @readInterval to 2000 by default", function() {
       expect(spark.readInterval).to.be.eql(2000);
     });
-  });
 
+  });
+/*
   describe("#commands", function() {
     it("returns an array of all Spark commands", function() {
       var commands = spark.commands;
@@ -37,31 +49,20 @@ describe("Cylon.Adaptors.Spark", function() {
   });
 
   describe("#command", function() {
-    var uri = deviceUrl + "testCommand";
-    var response = { once: spy() }
-
-    before(function() {
-      stub(rest, 'post').returns(response);
+    beforeEach(function() {
+      var mockCore;
+      stub(spark.core, 'callFunction').returns(mockCore);
     });
 
-    after(function() {
-      rest.post.restore();
-    });
-
-    it("makes a request to the Spark api to trigger a command", function() {
-      spark.command("testCommand");
-      expect(rest.post).to.be.calledWith(uri);
+    it("makes a request to the Spark api to trigger a function call", function() {
+      spark.command("testFunction");
+      expect(spark.core.callFunction).to.be.calledWith('testFunction');
     });
 
     context("with arguments", function() {
       it("passes the arguments in the request body", function() {
-        var params = {
-          headers: { "Authorization": "Bearer access_token" },
-          data: { args: "arg1,arg2,arg3" }
-        };
-
-        spark.command("testCommand", ["arg1", "arg2", "arg3"]);
-        expect(rest.post).to.be.calledWith(uri, params);
+        spark.command("testFunction", ["arg1", "arg2", "arg3"]);
+        expect(spark.core.callFunction).to.be.calledWith('testFunction', params.join(','));
       });
     });
 
@@ -98,14 +99,11 @@ describe("Cylon.Adaptors.Spark", function() {
     });
   });
 
-  describe("#variable", function() {
-    var uri = deviceUrl + "testVariable";
-
+  describe("#getVariable", function() {
     it("requests the variable's value from the Spark Core API", function() {
-      stub(rest, 'get').returns({ once: spy() });
+      stub(spark.core, 'getVariable');
       spark.variable("testVariable");
-      expect(rest.get).to.be.calledWith(uri);
-      rest.get.restore();
+      expect(spark.core.getVariable).to.be.calledWith('testVariable');
     });
 
     context("when successful", function() {
@@ -153,8 +151,7 @@ describe("Cylon.Adaptors.Spark", function() {
   });
 
   describe("#digitalRead", function() {
-    var clock,
-        uri = deviceUrl + "digitalread";
+    var clock;
 
     beforeEach(function() {
       clock = sinon.useFakeTimers();
@@ -162,22 +159,17 @@ describe("Cylon.Adaptors.Spark", function() {
 
     afterEach(function() {
       clock.restore();
-      rest.post.restore();
+      spark.callFunction.restore();
     });
 
     it("requests the value of a digital pin from the Spark Core API every 2 seconds", function() {
-      stub(rest, 'post').returns({ once: spy() });
-
-      var params = {
-        headers: { "Authorization": "Bearer access_token" },
-        data: { params: 'd4' }
-      };
+      stub(spark.core, 'callFunction').returns();
 
       spark.digitalRead('d4', spy());
 
       clock.tick(2050);
-      expect(rest.post).to.be.calledWith(uri, params);
-      expect(rest.post).to.be.calledOnce;
+      expect(spark.core.callFunction).to.be.calledWith('digitalread', 'd4');
+      expect(spark.core.callFunction).to.be.calledOnce;
     });
 
     it("calls the callback when it has the value", function() {
@@ -194,49 +186,36 @@ describe("Cylon.Adaptors.Spark", function() {
   });
 
   describe("#digitalWrite", function() {
-    var uri = deviceUrl + "digitalwrite";
-
     afterEach(function() {
       rest.post.restore();
     });
 
     it("sets the value of a digital pin via the Spark Core API", function() {
-      stub(rest, 'post')
-
-      var params = {
-        headers: { "Authorization": "Bearer access_token" },
-        data: { params: "4,HIGH" }
-      };
+      stub(spark.sparkApi, 'callFunction');
 
       spark.digitalWrite(4, 1);
-      expect(rest.post).to.be.calledWith(uri, params);
+      expect(spark.sparkApi.callFunction).to.be.calledWith('digitalwrite', '4,HIGH');
     });
   });
 
   describe("#analogRead", function() {
-    var clock,
-        uri = deviceUrl + "analogread";
+    var clock;
 
     beforeEach(function() {
       clock = sinon.useFakeTimers();
     });
 
     afterEach(function() {
-      rest.post.restore();
+      spark.sparkApi.callFunction.restore();
       clock.restore();
     });
 
     it("requests the value of a analog pin from the Spark Core API every 2 seconds", function() {
-      stub(rest, 'post').returns({ once: spy() });
-
-      var params = {
-        headers: { "Authorization": "Bearer access_token" },
-        data: { params: 'a4' }
-      };
+      stub(spark.sparkApi, 'callFunction');
 
       spark.analogRead('a4', spy());
       clock.tick(2050);
-      expect(rest.post).to.be.calledWith(uri, params);
+      expect(spark.sparkApi.callFunction).to.be.calledWith('digitalread', 'a4');
     });
 
     it("calls the callback when it has the value", function() {
@@ -253,62 +232,41 @@ describe("Cylon.Adaptors.Spark", function() {
   });
 
   describe("#analogWrite", function() {
-    var uri = deviceUrl + "analogwrite";
-
     afterEach(function() {
       rest.post.restore();
     });
 
     it("sets the value of a analog pin via the Spark Core API", function() {
-      stub(rest, 'post')
+      stub(spark.sparkApi, 'callFunction');
 
-      var params = {
-        headers: { "Authorization": "Bearer access_token" },
-        data: { params: "A4,2.93" }
-      };
-
-      spark.analogWrite('A4', 2.93);
-      expect(rest.post).to.be.calledWith(uri, params);
+      spark.analogWrite('A4', 1);
+      expect(spark.sparkApi.callFunction).to.be.calledWith('analogwrite', 'A4,255');
     });
   });
 
   describe("#pwmWrite", function() {
-    var uri = deviceUrl + "analogwrite";
-
     afterEach(function() {
-      rest.post.restore();
+      spark.sparkApi.callFunction.restore();
     });
 
     it("sets the value of a analog pin via the Spark Core API", function() {
-      stub(rest, 'post')
+      stub(spark.sparkApi, 'callFunction');
 
-      var params = {
-        headers: { "Authorization": "Bearer access_token" },
-        data: { params: "A4,255" }
-      };
-
-      spark.pwmWrite('A4', 2.93);
-      expect(rest.post).to.be.calledWith(uri, params);
+      spark.pwmWrite('A4', 1);
+      expect(spark.sparkApi.callFunction).to.be.calledWith('analogWrite', 'A4,255');
     });
   });
 
   describe("#servoWrite", function() {
-    var uri = deviceUrl + "analogwrite";
-
     afterEach(function() {
-      rest.post.restore();
+      spark.sparkApi.callFunction.restore();
     });
 
     it("sets the value of a analog pin via the Spark Core API", function() {
-      stub(rest, 'post')
-
-      var params = {
-        headers: { "Authorization": "Bearer access_token" },
-        data: { params: "S4,90" }
-      };
+      stub(spark.sparkApi, 'callFunction');
 
       spark.servoWrite('A4', 0.5);
-      expect(rest.post).to.be.calledWith(uri, params);
+      expect(spark.sparkApi.callFunction).to.be.calledWith('pwmwrite', 'S4,90');
     });
   });
 
@@ -324,4 +282,5 @@ describe("Cylon.Adaptors.Spark", function() {
       });
     });
   });
+ */
 });
