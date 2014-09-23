@@ -1,294 +1,257 @@
 "use strict";
 
-var rest = require('restler');
+var Cylon = require('cylon');
 
-var adaptor = source("spark");
+var Adaptor = source("spark");
 
-var sparkCloud = require('spark');
+var Spark = require('spark');
 
-describe("Cylon.Adaptors.Spark", function() {
-  var spark, sparkApi;
+describe("Spark", function() {
+  var adaptor;
 
-  before(function() {
-    spark = new adaptor({
-      extraParams: { deviceId: "device_id", accessToken: "access_token", }
+  beforeEach(function() {
+    adaptor = new Adaptor({
+      extraParams: {
+        deviceId: 'deviceId',
+        accessToken: 'accessToken',
+        readInterval: 1000,
+      }
     });
-    sparkApi = sinon.mock(sparkCloud);
   });
 
-  describe("constructor", function() {
-    it("sets @deviceId to the value passed in extraParams", function() {
-      expect(spark.deviceId).to.be.eql("device_id");
+  describe("#constructor", function() {
+    it('sets @deviceId to the provided value', function() {
+      expect(adaptor.deviceId).to.be.eql('deviceId');
     });
 
-    it("sets @accessToken to the value passed in extraParams", function() {
-      expect(spark.accessToken).to.be.eql("access_token");
+    it('sets @accessToken to the provided value', function() {
+      expect(adaptor.accessToken).to.be.eql('accessToken');
     });
 
-    it("sets @readInterval to 2000 by default", function() {
-      expect(spark.readInterval).to.be.eql(2000);
+    it('sets @readInterval to the provided value', function() {
+      expect(adaptor.readInterval).to.be.eql(1000);
     });
 
+    it('sets @readInterval to 2s by default', function() {
+      adaptor = new Adaptor();
+      expect(adaptor.readInterval).to.be.eql(2000);
+    });
+
+    it("sets @core to null by default", function() {
+      expect(adaptor.core).to.be.eql(null);
+    });
+
+    it("sets @loginInfo to null by default", function() {
+      expect(adaptor.loginInfo).to.be.eql(null);
+    });
   });
 
   describe("#connect", function() {
     var callback;
 
-    it("should call login and return login info", function() {
-      spy(sparkApi, 'login');
+    beforeEach(function() {
+      callback = spy();
+      stub(Spark, 'login');
 
-      spark.connect();
+      // TODO - needs to be replaced with a normal stub once the Spark module
+      // has been updated
+      Spark.getDevice = stub();
 
-      expect(sparkApi.login).to.be.calledOnce;
+      stub(Cylon.Logger, 'error');
+      adaptor.connect(callback);
+    });
 
+    afterEach(function() {
+      Spark.login.restore();
+      Cylon.Logger.error.restore();
+    });
+
+    it("attempts to log into the Spark API with the access token", function() {
+      expect(Spark.login).to.be.calledWith({ accessToken: 'accessToken' });
+    });
+
+    describe("if an error occurs while connecting to the API", function() {
+      beforeEach(function() {
+        Spark.login.yields("loginError");
+        adaptor.connect(callback);
+      });
+
+      it("triggers the callback with the error", function() {
+        expect(callback).to.be.calledWith("loginError");
+      });
+
+      it("logs that a login error occured", function() {
+        var msg = "An error occured on login to Spark Cloud: ";
+        expect(Cylon.Logger.error).to.be.calledWith(msg, "loginError");
+      });
+    });
+
+    describe("after the API connects", function() {
+      beforeEach(function() {
+        Spark.login.yields(null, "loginInfo");
+        adaptor.connect(callback);
+      });
+
+      it("tries to get the device", function() {
+        expect(Spark.getDevice).to.be.calledWith("deviceId");
+      });
+
+      it("sets @loginInfo to the values returned from Spark", function() {
+        expect(adaptor.loginInfo).to.be.eql("loginInfo");
+      });
+
+      context("if an error occurs while getting the device", function() {
+        beforeEach(function() {
+          Spark.getDevice.yields("getDeviceError");
+          adaptor.connect(callback);
+        });
+
+        it("triggers the callback with the error", function() {
+          expect(callback).to.be.calledWith("getDeviceError");
+        });
+
+        it("logs that a login error occured", function() {
+          var msg = "An error occured when retrieving core info from Spark Cloud: ";
+          expect(Cylon.Logger.error).to.be.calledWith(msg, "getDeviceError");
+        });
+      });
+
+      describe("after getting the device details", function() {
+        beforeEach(function() {
+          Spark.getDevice.yields(null, "core");
+          adaptor.connect(callback);
+        });
+
+        it("triggers the callback with the core", function() {
+          expect(callback).to.be.calledWith(null, "core");
+        });
+
+        it("sets @core to the core", function() {
+          expect(adaptor.core).to.be.eql("core");
+        });
+      });
     });
   });
-});
 
-/*
   describe("#commands", function() {
-    it("returns an array of all Spark commands", function() {
-      var commands = spark.commands;
-      expect(commands).to.be.an('array');
+    it("is an array of Spark commands", function() {
+      expect(adaptor.commands).to.be.an('array');
 
-      for (var i = 0; i < commands.length; i++) {
-        expect(commands[i]).to.be.a('string');
-      }
+      adaptor.commands.map(function(cmd) {
+        expect(cmd).to.be.a('string');
+      });
+    })
+  });
+
+  describe("#callFunction", function() {
+    var callFunction;
+
+    beforeEach(function() {
+      adaptor.core = { callFunction: spy() };
+      callFunction = adaptor.core.callFunction;
+    });
+
+    it("triggers the core's #callFunction", function() {
+      var callback = function() {};
+      adaptor.callFunction("fn", ["1", 3, "testing"], callback);
+      expect(callFunction).to.be.calledWith("fn", "1,3,testing", callback)
+    });
+
+    context("if no arguments are passed", function() {
+      it("defaults to an empty set", function() {
+        var callback = function() {};
+        adaptor.callFunction("fn", null, callback);
+        expect(callFunction).to.be.calledWith("fn", "", callback);
+      });
     });
   });
 
   describe("#command", function() {
-    beforeEach(function() {
-      var mockCore;
-      stub(spark.core, 'callFunction').returns(mockCore);
-    });
-
-    it("makes a request to the Spark api to trigger a function call", function() {
-      spark.command("testFunction");
-      expect(spark.core.callFunction).to.be.calledWith('testFunction');
-    });
-
-    context("with arguments", function() {
-      it("passes the arguments in the request body", function() {
-        spark.command("testFunction", ["arg1", "arg2", "arg3"]);
-        expect(spark.core.callFunction).to.be.calledWith('testFunction', params.join(','));
-      });
-    });
-
-    context("with a callback", function() {
-      context("if the API returns an error", function() {
-        var data = { ok: false, error: "Invalid command" }
-        var response = { once: stub().callsArgWith(1, data) }
-
-        before(function() {
-          rest.post.returns(response);
-        });
-
-        it("triggers the callback with the error message", function() {
-          var callback = spy();
-          spark.command("testCommand", [], callback);
-          expect(callback).to.be.calledWith("Invalid command", null);
-        })
-      });
-
-      context("if the command ran successfully", function() {
-        var data = { return_value: 42 }
-        var response = { once: stub().callsArgWith(1, data) }
-
-        before(function() {
-          rest.post.returns(response);
-        });
-
-        it("triggers the callback with the return value", function() {
-          var callback = spy();
-          spark.command("testCommand", [], callback);
-          expect(callback).to.be.calledWith(null, 42);
-        });
-      });
-    });
+    it("is a proxy to callFunction", function() {
+      expect(adaptor.command).to.be.eql(adaptor.callFunction);
+    })
   });
 
   describe("#getVariable", function() {
-    it("requests the variable's value from the Spark Core API", function() {
-      stub(spark.core, 'getVariable');
-      spark.variable("testVariable");
-      expect(spark.core.getVariable).to.be.calledWith('testVariable');
+    var getVariable, callback;
+
+    beforeEach(function() {
+      adaptor.core = {};
+      getVariable = adaptor.core.getVariable = spy();
+      callback = spy();
     });
 
-    context("when successful", function() {
-      var data = { result: 42 };
-      var response = { once: stub().callsArgWith(1, data) };
-
-      before(function() {
-        stub(rest, 'get').returns(response);
-      });
-
-      after(function() {
-        rest.get.restore();
-      });
-
-      it("triggers the callback with the value", function() {
-        var callback = spy();
-        spark.variable("testVariable", callback);
-        expect(callback).to.be.calledWith(null, 42);
-      });
+    it("requests the variable name from the Spark API", function() {
+      adaptor.getVariable("hi", callback);
+      expect(getVariable).to.be.calledWith("hi", callback);
     });
 
-    context("when an error occurs", function() {
-      var data = { ok: false, error: "Invalid variable" };
-      var response = { once: stub().callsArgWith(1, data) };
+    it("truncates after the 12th char", function() {
+      adaptor.getVariable("temperature_sensor", callback);
+      expect(getVariable).to.be.calledWith("temperature_", callback);
+    })
+  });
 
-      before(function() {
-        stub(rest, 'get').returns(response);
-      });
-
-      after(function() {
-        rest.get.restore();
-      });
-
-      it("triggers the callback with the error message", function() {
-        var callback = spy();
-        spark.variable("testVariable", callback);
-        expect(callback).to.be.calledWith("Invalid variable", null);
-      });
+  describe("#variable", function() {
+    it("is an alias to #getVariable", function() {
+      expect(adaptor.variable).to.be.eql(adaptor.getVariable);
     });
   });
 
-  describe("#listenForEvents", function() {
-    // TODO, could not figure out satisfactory way to stub out EventSource
-    // constructor for testing.
+  describe("#onEvent", function() {
+    var onEvent, callback;
+
+    beforeEach(function() {
+      adaptor.core = {};
+      onEvent = adaptor.core.onEvent = stub();
+      callback = spy();
+      adaptor.onEvent("hello", callback)
+    });
+
+    it("subscribes to an event on the Spark Core", function() {
+      expect(onEvent).to.be.calledWith("hello");
+    });
+
+    context("when the event is triggered", function() {
+      beforeEach(function() {
+        onEvent.yields(null, "data");
+        adaptor.connection = { emit: spy() };
+        adaptor.onEvent("hello", callback);
+      });
+
+      it("emits the event data through the connection", function() {
+        expect(adaptor.connection.emit).to.be.calledWith("hello", "data");
+      });
+
+      it("triggers the callback if it was provided", function() {
+        expect(callback).to.be.calledWith(null, "data");
+      });
+    });
   });
 
   describe("#digitalRead", function() {
-    var clock;
+    var callFunction, callback;
 
     beforeEach(function() {
-      clock = sinon.useFakeTimers();
+      adaptor.core = {};
+      callFunction = adaptor.core.callFunction = stub();
+      callback = spy();
+
+      stub(Cylon.Utils, 'every').yields();
+      adaptor.digitalRead("pin", callback);
     });
 
     afterEach(function() {
-      clock.restore();
-      spark.callFunction.restore();
+      Cylon.Utils.every.restore();
     });
 
-    it("requests the value of a digital pin from the Spark Core API every 2 seconds", function() {
-      stub(spark.core, 'callFunction').returns();
-
-      spark.digitalRead('d4', spy());
-
-      clock.tick(2050);
-      expect(spark.core.callFunction).to.be.calledWith('digitalread', 'd4');
-      expect(spark.core.callFunction).to.be.calledOnce;
+    it("reads on @readInterval", function() {
+      expect(Cylon.Utils.every).to.be.calledWith(adaptor.readInterval);
     });
 
-    it("calls the callback when it has the value", function() {
-      var value = { return_value: 1 };
-      var response = { once: stub().callsArgWith(1, value) };
-      var callback = spy();
-
-      stub(rest, 'post').returns(response);
-
-      spark.digitalRead('d4', callback);
-      clock.tick(2050);
-      expect(callback).to.be.calledWith(1);
+    it("doesn't make new requests if the current one hasn't finished", function() {
+      Cylon.Utils.every.yield();
+      expect(callFunction).to.be.calledOnce;
     });
   });
-
-  describe("#digitalWrite", function() {
-    afterEach(function() {
-      rest.post.restore();
-    });
-
-    it("sets the value of a digital pin via the Spark Core API", function() {
-      stub(spark.sparkApi, 'callFunction');
-
-      spark.digitalWrite(4, 1);
-      expect(spark.sparkApi.callFunction).to.be.calledWith('digitalwrite', '4,HIGH');
-    });
-  });
-
-  describe("#analogRead", function() {
-    var clock;
-
-    beforeEach(function() {
-      clock = sinon.useFakeTimers();
-    });
-
-    afterEach(function() {
-      spark.sparkApi.callFunction.restore();
-      clock.restore();
-    });
-
-    it("requests the value of a analog pin from the Spark Core API every 2 seconds", function() {
-      stub(spark.sparkApi, 'callFunction');
-
-      spark.analogRead('a4', spy());
-      clock.tick(2050);
-      expect(spark.sparkApi.callFunction).to.be.calledWith('digitalread', 'a4');
-    });
-
-    it("calls the callback when it has the value", function() {
-      var value = { return_value: 1027 };
-      var response = { once: stub().callsArgWith(1, value) };
-      var callback = spy();
-
-      stub(rest, 'post').returns(response);
-
-      spark.analogRead(4, callback);
-      clock.tick(2050);
-      expect(callback).to.be.calledWith(1027);
-    });
-  });
-
-  describe("#analogWrite", function() {
-    afterEach(function() {
-      rest.post.restore();
-    });
-
-    it("sets the value of a analog pin via the Spark Core API", function() {
-      stub(spark.sparkApi, 'callFunction');
-
-      spark.analogWrite('A4', 1);
-      expect(spark.sparkApi.callFunction).to.be.calledWith('analogwrite', 'A4,255');
-    });
-  });
-
-  describe("#pwmWrite", function() {
-    afterEach(function() {
-      spark.sparkApi.callFunction.restore();
-    });
-
-    it("sets the value of a analog pin via the Spark Core API", function() {
-      stub(spark.sparkApi, 'callFunction');
-
-      spark.pwmWrite('A4', 1);
-      expect(spark.sparkApi.callFunction).to.be.calledWith('analogWrite', 'A4,255');
-    });
-  });
-
-  describe("#servoWrite", function() {
-    afterEach(function() {
-      spark.sparkApi.callFunction.restore();
-    });
-
-    it("sets the value of a analog pin via the Spark Core API", function() {
-      stub(spark.sparkApi, 'callFunction');
-
-      spark.servoWrite('A4', 0.5);
-      expect(spark.sparkApi.callFunction).to.be.calledWith('pwmwrite', 'S4,90');
-    });
-  });
-
-  describe("#pinVal", function() {
-    context("when the pin value is 1", function() {
-      it("returns 'HIGH'", function() {
-        expect(spark.pinVal(1)).to.be.eql("HIGH");
-      });
-    });
-    context("when the pin value is 0", function() {
-      it("returns 'LOW'", function() {
-        expect(spark.pinVal(1)).to.be.eql("HIGH");
-      });
-    });
-  });
- */
+});
