@@ -53,7 +53,9 @@ describe("Spark", function() {
       callback = spy();
 
       stub(Spark, 'login');
-      stub(Spark, 'getDevice');
+      // TODO: Change to regular stub once the spark module is updated
+      // stub(Spark, 'getDevice');
+      Spark.getDevice = stub();
 
       stub(Cylon.Logger, 'error');
       adaptor.connect(callback);
@@ -61,7 +63,6 @@ describe("Spark", function() {
 
     afterEach(function() {
       Spark.login.restore();
-      Spark.getDevice.restore();
       Cylon.Logger.error.restore();
     });
 
