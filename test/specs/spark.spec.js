@@ -249,9 +249,154 @@ describe("Spark", function() {
       expect(Cylon.Utils.every).to.be.calledWith(adaptor.readInterval);
     });
 
+    it("tells the core to run the #digitalread command on the pin", function() {
+      expect(callFunction).to.be.calledWith('digitalread', 'pin');
+    })
+
     it("doesn't make new requests if the current one hasn't finished", function() {
       Cylon.Utils.every.yield();
       expect(callFunction).to.be.calledOnce;
+    });
+
+    context("if #digitalread returns an error", function() {
+      beforeEach(function() {
+        callFunction.yield("error", null);
+      });
+
+      it("triggers the callback with the error", function() {
+        expect(callback).to.be.calledWith("error", null);
+      });
+    });
+
+    context("if digitalRead returns a value from the Spark", function() {
+      beforeEach(function() {
+        callFunction.yield(null, { return_value: 1 });
+      });
+
+      it("triggers the callback with the error", function() {
+        expect(callback).to.be.calledWith(null, 1);
+      });
+    });
+  });
+
+  describe("#digitalWrite", function() {
+    var callFunction;
+
+    beforeEach(function() {
+      adaptor.core = {};
+      callFunction = adaptor.core.callFunction = stub();
+    });
+
+    it("writes values to the pin", function() {
+      adaptor.digitalWrite(1, 0);
+      expect(callFunction).to.be.calledWith('digitalwrite', '1,LOW');
+
+      adaptor.digitalWrite(1, 1);
+      expect(callFunction).to.be.calledWith('digitalwrite', '1,HIGH');
+    });
+  });
+
+  describe("#analogRead", function() {
+    var callFunction, callback;
+
+    beforeEach(function() {
+      adaptor.core = {};
+      callFunction = adaptor.core.callFunction = stub();
+      callback = spy();
+
+      stub(Cylon.Utils, 'every').yields();
+      adaptor.analogRead("pin", callback);
+    });
+
+    afterEach(function() {
+      Cylon.Utils.every.restore();
+    });
+
+    it("reads on @readInterval", function() {
+      expect(Cylon.Utils.every).to.be.calledWith(adaptor.readInterval);
+    });
+
+    it("tells the core to run the #analogread command on the pin", function() {
+      expect(callFunction).to.be.calledWith('analogread', 'pin');
+    })
+
+    it("doesn't make new requests if the current one hasn't finished", function() {
+      Cylon.Utils.every.yield();
+      expect(callFunction).to.be.calledOnce;
+    });
+
+    context("if #analogread returns an error", function() {
+      beforeEach(function() {
+        callFunction.yield("error", null);
+      });
+
+      it("triggers the callback with the error", function() {
+        expect(callback).to.be.calledWith("error", null);
+      });
+    });
+
+    context("if analogRead returns a value from the Spark", function() {
+      beforeEach(function() {
+        callFunction.yield(null, { return_value: 1 });
+      });
+
+      it("triggers the callback with the error", function() {
+        expect(callback).to.be.calledWith(null, 1);
+      });
+    });
+  });
+
+  describe("#analogWrite", function() {
+    var callFunction;
+
+    beforeEach(function() {
+      adaptor.core = {};
+      callFunction = adaptor.core.callFunction = stub();
+    });
+
+    it("writes values to the pin", function() {
+      adaptor.analogWrite(1, 0.5);
+      expect(callFunction).to.be.calledWith('analogwrite', '1,0.5');
+    });
+  });
+
+  describe("#pwmWrite", function() {
+    beforeEach(function() {
+      stub(adaptor, 'analogWrite');
+    });
+
+    afterEach(function() {
+      adaptor.analogWrite.restore();
+    });
+
+    it("converts converts values for #analogWrite", function() {
+      adaptor.pwmWrite(1, 0.6);
+      expect(adaptor.analogWrite).to.be.calledWith(1, 153);
+    });
+  });
+
+  describe("#servoWrite", function() {
+    beforeEach(function() {
+      stub(adaptor, 'analogWrite');
+    });
+
+    afterEach(function() {
+      adaptor.analogWrite.restore();
+    });
+
+    it("converts values for #analogWrite", function() {
+      adaptor.servoWrite('A0', 0.5);
+      expect(adaptor.analogWrite).to.be.calledWith('S0', 90);
+    });
+  });
+
+  describe("#pinVal", function() {
+    it("returns 'HIGH' for values of 1", function() {
+      expect(adaptor.pinVal(1)).to.be.eql('HIGH');
+    });
+
+    it("returns 'LOW' for other values", function() {
+      expect(adaptor.pinVal(0)).to.be.eql('LOW');
     });
   });
 });
