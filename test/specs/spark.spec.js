@@ -2,7 +2,7 @@
 
 var Cylon = require('cylon');
 
-var Adaptor = source("spark");
+var Adaptor = source("spark-adaptor");
 
 var Spark = require('spark');
 
@@ -251,7 +251,7 @@ describe("Spark", function() {
 
     it("tells the core to run the #digitalread command on the pin", function() {
       expect(callFunction).to.be.calledWith('digitalread', 'pin');
-    })
+    });
 
     it("doesn't make new requests if the current one hasn't finished", function() {
       Cylon.Utils.every.yield();

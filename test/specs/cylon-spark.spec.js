@@ -2,8 +2,8 @@
 
 var GPIO = require('cylon-gpio');
 
-var Spark = source('adaptor');
-var VoodooSpark = source('voodoospark');
+var Spark = source('spark-adaptor');
+var VoodooSpark = source('voodoospark-adaptor');
 
 var module = source("cylon-spark");
 
