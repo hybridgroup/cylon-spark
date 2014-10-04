@@ -2,7 +2,7 @@
 
 var Cylon = require('cylon');
 
-var Adaptor = source("spark");
+var Adaptor = source("spark-adaptor");
 
 var Spark = require('spark');
 
@@ -251,21 +251,11 @@ describe("Spark", function() {
 
     it("tells the core to run the #digitalread command on the pin", function() {
       expect(callFunction).to.be.calledWith('digitalread', 'pin');
-    })
+    });
 
     it("doesn't make new requests if the current one hasn't finished", function() {
       Cylon.Utils.every.yield();
       expect(callFunction).to.be.calledOnce;
-    });
-
-    context("if #digitalread returns an error", function() {
-      beforeEach(function() {
-        callFunction.yield("error", null);
-      });
-
-      it("triggers the callback with the error", function() {
-        expect(callback).to.be.calledWith("error", null);
-      });
     });
 
     context("if digitalRead returns a value from the Spark", function() {
@@ -275,6 +265,16 @@ describe("Spark", function() {
 
       it("triggers the callback with the error", function() {
         expect(callback).to.be.calledWith(null, 1);
+      });
+    });
+
+    context("if #digitalread returns an error", function() {
+      beforeEach(function() {
+        callFunction.yield("error", null);
+      });
+
+      it("triggers the callback with the error", function() {
+        expect(callback).to.be.calledWith("error", null);
       });
     });
   });
@@ -318,7 +318,7 @@ describe("Spark", function() {
 
     it("tells the core to run the #analogread command on the pin", function() {
       expect(callFunction).to.be.calledWith('analogread', 'pin');
-    })
+    });
 
     it("doesn't make new requests if the current one hasn't finished", function() {
       Cylon.Utils.every.yield();
@@ -340,7 +340,7 @@ describe("Spark", function() {
         callFunction.yield(null, { return_value: 1 });
       });
 
-      it("triggers the callback with the error", function() {
+      it("triggers the callback with the data", function() {
         expect(callback).to.be.calledWith(null, 1);
       });
     });

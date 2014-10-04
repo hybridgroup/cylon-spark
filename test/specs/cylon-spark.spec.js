@@ -2,8 +2,8 @@
 
 var GPIO = require('cylon-gpio');
 
-var Spark = source('spark');
-var VoodooSpark = source('voodoospark');
+var Spark = source('spark-adaptor');
+var VoodooSpark = source('voodoospark-adaptor');
 
 var module = source("cylon-spark");
 
@@ -37,7 +37,10 @@ describe("Cylon.Spark", function() {
   });
 
   describe("register", function() {
-    var bot = { registerAdaptor: spy() };
+    var bot = {
+      registerAdaptor: spy(),
+      registerDriver: spy()
+    };
 
     before(function() {
       stub(GPIO, 'register').returns();
