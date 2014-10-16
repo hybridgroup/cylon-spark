@@ -8,10 +8,10 @@ Cylon.robot({
     deviceId: '[YOUR_DEVICE_ID]'
   },
 
-  work: function(my) {
-    my.spark.listenForEvents(["testevent"]);
+  device: { name: 'spark', driver: 'spark' },
 
-    my.spark.on('testevent', function(data) {
+  work: function(my) {
+    my.spark.onEvent('testevent', function(data) {
       console.log("Test Event Received. Data:", data);
     });
   }

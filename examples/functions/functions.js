@@ -8,9 +8,11 @@ Cylon.robot({
     deviceId: '[YOUR_DEVICE_ID]'
   },
 
+  device: { name: 'spark', driver: 'spark' },
+
   work: function(my) {
     every((5).seconds(), function() {
-      my.spark.command("fortyTwo", [], function(err, data) {
+      my.spark.callFunction("fortyTwo", [], function(err, data) {
         if (err) {
           console.log("An error occured!", err);
         } else {
