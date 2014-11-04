@@ -11,11 +11,9 @@ describe("Spark", function() {
 
   beforeEach(function() {
     adaptor = new Adaptor({
-      extraParams: {
-        deviceId: 'deviceId',
-        accessToken: 'accessToken',
-        readInterval: 1000,
-      }
+      deviceId: 'deviceId',
+      accessToken: 'accessToken',
+      readInterval: 1000,
     });
   });
 

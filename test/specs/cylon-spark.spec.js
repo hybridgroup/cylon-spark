@@ -1,62 +1,46 @@
 "use strict";
 
-var GPIO = require('cylon-gpio');
-
-var Spark = source('spark-adaptor');
-var VoodooSpark = source('voodoospark-adaptor');
+var Adaptor = source('spark-adaptor'),
+    Driver = source('spark-driver'),
+    VoodooSpark = source('voodoospark-adaptor');
 
 var module = source("cylon-spark");
 
 describe("Cylon.Spark", function() {
+  describe("#adaptors", function() {
+    it('is an array of supplied adaptors', function() {
+      expect(module.adaptors).to.be.eql(['spark', 'voodoospark']);
+    });
+  });
+
+  describe("#drivers", function() {
+    it('is an array of supplied drivers', function() {
+      expect(module.drivers).to.be.eql(['spark']);
+    });
+  });
+
+  describe("#dependencies", function() {
+    it('is an array of supplied dependencies', function() {
+      expect(module.dependencies).to.be.eql(['cylon-gpio']);
+    });
+  });
+
   describe("adaptor", function() {
     it("generates a new Spark adaptor with the provided arguments", function() {
-      var adaptor = module.adaptor({name: "spark" });
-      expect(adaptor).to.be.an.instanceOf(Spark);
+      var adaptor = module.adaptor({adaptor: "spark" });
+      expect(adaptor).to.be.an.instanceOf(Adaptor);
     });
 
     it("generates a new VoodooSpark adaptor with the provided arguments", function() {
-      var adaptor = module.adaptor({name: "voodoospark" });
+      var adaptor = module.adaptor({adaptor: "voodoospark" });
       expect(adaptor).to.be.an.instanceOf(VoodooSpark);
     });
   });
 
   describe("driver", function() {
-    before(function() {
-      stub(GPIO, 'driver').returns({});
-    });
-
-    after(function() {
-      GPIO.driver.restore();
-    });
-
-    it("creates a driver through the GPIO module", function() {
-      var params = { name: 'led' };
-      module.driver(params);
-      expect(GPIO.driver).to.be.calledOnce;
-    });
-  });
-
-  describe("register", function() {
-    var bot = {
-      registerAdaptor: spy(),
-      registerDriver: spy()
-    };
-
-    before(function() {
-      stub(GPIO, 'register').returns();
-      module.register(bot);
-    });
-
-    after(function() {
-      GPIO.register.restore();
-    });
-
-    it("registers the Spark adaptor", function() {
-      expect(bot.registerAdaptor).to.be.calledWith("cylon-spark", "spark");
-    });
-
-    it("tells GPIO to register itself", function() {
-      expect(GPIO.register).to.be.calledWith(bot);
+    it("generates a new Spark driver with the provided arguments", function() {
+      var driver = module.driver({driver: "spark", device: { connection: {} }});
+      expect(driver).to.be.an.instanceOf(Driver);
     });
   });
 });
