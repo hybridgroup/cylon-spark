@@ -13,7 +13,7 @@ describe("Spark", function() {
     adaptor = new Adaptor({
       deviceId: 'deviceId',
       accessToken: 'accessToken',
-      readInterval: 1000,
+      readInterval: 1000
     });
   });
 
@@ -51,6 +51,7 @@ describe("Spark", function() {
       callback = spy();
 
       stub(Spark, 'login');
+      adaptor.connection = { emit: spy() };
       // TODO: Change to regular stub once the spark module is updated
       // stub(Spark, 'getDevice');
       Spark.getDevice = stub();
