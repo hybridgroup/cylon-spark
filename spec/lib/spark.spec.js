@@ -51,7 +51,7 @@ describe("Spark", function() {
       callback = spy();
 
       stub(Spark, 'login');
-      adaptor.connection = { emit: spy() };
+      adaptor.emit = spy();
       // TODO: Change to regular stub once the spark module is updated
       // stub(Spark, 'getDevice');
       Spark.getDevice = stub();
@@ -214,12 +214,12 @@ describe("Spark", function() {
     context("when the event is triggered", function() {
       beforeEach(function() {
         onEvent.yields(null, "data");
-        adaptor.connection = { emit: spy() };
+        adaptor.emit = spy();
         adaptor.onEvent("hello", callback);
       });
 
-      it("emits the event data through the connection", function() {
-        expect(adaptor.connection.emit).to.be.calledWith("hello", "data");
+      it("emits the event data", function() {
+        expect(adaptor.emit).to.be.calledWith("hello", "data");
       });
 
       it("triggers the callback if it was provided", function() {

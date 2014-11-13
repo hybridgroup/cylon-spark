@@ -39,7 +39,7 @@ describe("Cylon.Spark", function() {
 
   describe("driver", function() {
     it("generates a new Spark driver with the provided arguments", function() {
-      var driver = module.driver({driver: "spark", device: { connection: {} }});
+      var driver = module.driver({driver: "spark", adaptor: {}});
       expect(driver).to.be.an.instanceOf(Driver);
     });
   });
