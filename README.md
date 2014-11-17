@@ -55,7 +55,7 @@ var Cylon = require('cylon');
 
 // Initialize the robot
 Cylon.robot({
-  connection: { name: 'voodoospark', adaptor: 'voodoospark', accessToken: 'XYZPDQ123', deviceId: '123ABC456', module: 'spark' },
+  connection: { name: 'voodoospark', adaptor: 'voodoospark', accessToken: 'XYZPDQ123', deviceId: '123ABC456', module: 'cylon-spark' },
   device: {name: 'led', driver: 'led', pin: 'D0'},
 
   work: function(my) {
