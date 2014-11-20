@@ -18,6 +18,8 @@ describe("Spark", function() {
   });
 
   describe("#constructor", function() {
+    var error = "No deviceId and/or accessToken provided for Spark adaptor 'undefined'. Cannot proceed";
+
     it('sets @deviceId to the provided value', function() {
       expect(adaptor.deviceId).to.be.eql('deviceId');
     });
@@ -31,7 +33,7 @@ describe("Spark", function() {
     });
 
     it('sets @readInterval to 2s by default', function() {
-      adaptor = new Adaptor();
+      adaptor = new Adaptor({ deviceId: '', accessToken: '' });
       expect(adaptor.readInterval).to.be.eql(2000);
     });
 
@@ -41,6 +43,27 @@ describe("Spark", function() {
 
     it("sets @loginInfo to null by default", function() {
       expect(adaptor.loginInfo).to.be.eql(null);
+    });
+
+    context("if no deviceId is specified", function() {
+      it("throws an error", function() {
+        var fn = function() { new Adaptor({ accessToken: '' }); };
+        expect(fn).to.throw(error);
+      });
+    });
+
+    context("if no accessToken is specified", function() {
+      it("throws an error", function() {
+        var fn = function() { new Adaptor({ deviceId: '' }); };
+        expect(fn).to.throw(error);
+      });
+    });
+
+    context("if no deviceId or accessToken is specified", function() {
+      it("throws an error", function() {
+        var fn = function() { new Adaptor({}); };
+        expect(fn).to.throw(error);
+      });
     });
   });
 

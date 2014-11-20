@@ -27,19 +27,19 @@ describe("Cylon.Spark", function() {
 
   describe("adaptor", function() {
     it("generates a new Spark adaptor with the provided arguments", function() {
-      var adaptor = module.adaptor({adaptor: "spark" });
+      var adaptor = module.adaptor({ adaptor: "spark", deviceId: '', accessToken: '' });
       expect(adaptor).to.be.an.instanceOf(Adaptor);
     });
 
     it("generates a new VoodooSpark adaptor with the provided arguments", function() {
-      var adaptor = module.adaptor({adaptor: "voodoospark" });
+      var adaptor = module.adaptor({ adaptor: "voodoospark", deviceId: '', accessToken: '' });
       expect(adaptor).to.be.an.instanceOf(VoodooSpark);
     });
   });
 
   describe("driver", function() {
     it("generates a new Spark driver with the provided arguments", function() {
-      var driver = module.driver({driver: "spark", adaptor: {}});
+      var driver = module.driver({ driver: "spark", adaptor: {} });
       expect(driver).to.be.an.instanceOf(Driver);
     });
   });
