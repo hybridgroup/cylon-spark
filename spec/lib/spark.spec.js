@@ -18,7 +18,7 @@ describe("Spark", function() {
   });
 
   describe("#constructor", function() {
-    var error = "No deviceId and/or accessToken provided for Spark adaptor 'undefined'. Cannot proceed";
+    var error = "No deviceId and/or accessToken provided for Spark adaptor. Cannot proceed";
 
     it('sets @deviceId to the provided value', function() {
       expect(adaptor.deviceId).to.be.eql('deviceId');
