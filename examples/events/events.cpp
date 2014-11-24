@@ -1,9 +1,6 @@
 /**
   * Spark Core source to go along with the 'Events' example. To upload this
-  * to your Spark Core, you can use the Build tool at https://spark.io/build, or
-  * the Cylon command included with cylon-spark:
-  *
-  * $ cylon spark upload [access_token] [device_id] ./path/to/functions.cpp
+  * to your Spark Core, you can use the Build tool at https://spark.io/build
   */
 
 // need this to use the Spark variable
