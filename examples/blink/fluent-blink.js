@@ -2,18 +2,13 @@ var Cylon = require('cylon');
 
 Cylon
   .robot()
-  .connection({
-    name: 'spark',
+  .connection('spark', {
     adaptor: 'spark',
     accessToken: '[YOUR_ACCESS_TOKEN]',
     deviceId: '[YOUR_DEVICE_ID]'
   })
 
-  .device({
-    name: 'led',
-    driver: 'led',
-    pin: 'D7'
-  })
+  .device('led', { driver: 'led', pin: 'D7' })
 
   .on('ready', function(my) {
     setInterval(function() {
