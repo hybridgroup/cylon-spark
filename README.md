@@ -41,22 +41,39 @@ var Cylon = require('cylon');
 
 // Initialize the robot
 Cylon.robot({
-  connection: { name: 'spark', adaptor: 'spark', accessToken: 'XYZPDQ123', deviceId: '123ABC456' },
-  device: {name: 'led', driver: 'led', pin: 'D0'},
+  connections: {
+    spark: { adaptor: 'spark', accessToken: 'XYZPDQ123', deviceId: '123ABC456' }
+  },
+
+  devices: {
+    led: { driver: 'led', pin: 'D0'}
+  },
 
   work: function(my) {
     every((1).second(), function() {my.led.toggle()});
   }
 }).start();
 ```
+
 ### Spark using VoodooSpark API:
+
 ```javascript
 var Cylon = require('cylon');
 
 // Initialize the robot
 Cylon.robot({
-  connection: { name: 'voodoospark', adaptor: 'voodoospark', accessToken: 'XYZPDQ123', deviceId: '123ABC456', module: 'cylon-spark' },
-  device: {name: 'led', driver: 'led', pin: 'D0'},
+  connections: {
+    voodoospark: {
+      adaptor: 'voodoospark',
+      accessToken: 'XYZPDQ123',
+      deviceId: '123ABC456',
+      module: 'cylon-spark'
+    }
+  },
+
+  devices: {
+    led: { driver: 'led', pin: 'D0' }
+  },
 
   work: function(my) {
     every((1).second(), function() {my.led.toggle()});
