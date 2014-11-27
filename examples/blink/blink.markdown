@@ -23,17 +23,16 @@ We'll have a singular connection to a Spark Core, using the
 previously-mentioned `cylon-spark` module. We'll also have one device, the LED
 on pin D7.
 
-      connection: {
-        name: 'spark',
-        adaptor: 'spark',
-        accessToken: '[YOUR_ACCESS_TOKEN]',
-        deviceId: '[YOUR_DEVICE_ID]'
+      connections: {
+        spark: {
+          adaptor: 'spark',
+          accessToken: '[YOUR_ACCESS_TOKEN]',
+          deviceId: '[YOUR_DEVICE_ID]'
+        }
       },
 
-      device: {
-        name: 'led',
-        driver: 'led',
-        pin: 'D7'
+      devices: {
+        led: { driver: 'led', pin: 'D7' }
       },
 
 Those are all the components for our robot, so next we'll define the work. All

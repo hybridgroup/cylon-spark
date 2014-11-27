@@ -25,11 +25,12 @@ With that done, we can begin to setup our robot:
 Our robot has one connection, which we'll call `spark`. It uses the Spark
 adaptor, and has our Spark access token and the device id from our core:
 
-      connection: {
-        name: 'spark',
-        adaptor: 'spark',
-        accessToken: '[YOUR_ACCESS_TOKEN]',
-        deviceId: '[YOUR_DEVICE_ID]'
+      connections: {
+        spark: {
+          adaptor: 'spark',
+          accessToken: '[YOUR_ACCESS_TOKEN]',
+          deviceId: '[YOUR_DEVICE_ID]'
+        }
       },
 
 For our robot's work, we're going to tell it to listen for the 'testevent'
