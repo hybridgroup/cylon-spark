@@ -16,10 +16,10 @@
   "license": "Apache 2.0",
 
   "devDependencies": {
-    "sinon-chai": "~2.5.0",
-    "chai":       "~1.9.1",
-    "mocha":      "~1.18.2",
-    "sinon":      "~1.9.0"
+    "sinon-chai": "2.6.0",
+    "chai": "1.9.2",
+    "mocha": "1.21.5",
+    "sinon": "1.10.3"
   },
 
   "peerDependencies": {

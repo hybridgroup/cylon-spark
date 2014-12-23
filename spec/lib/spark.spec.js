@@ -75,7 +75,7 @@ describe("Spark", function() {
 
       stub(Spark, 'login');
       adaptor.emit = spy();
-      stub(Spark, 'getDevice');
+      stub(Spark, 'getDevice').yields(null, { coreid: '1234', token: '123456789' });
 
       stub(Cylon.Logger, 'error');
       adaptor.connect(callback);
@@ -429,6 +429,31 @@ describe("Spark", function() {
     it("converts values for #analogWrite", function() {
       adaptor.servoWrite('A0', 0.5);
       expect(adaptor.analogWrite).to.be.calledWith('S0', 90);
+    });
+  });
+
+  describe("#coreAttrs", function() {
+    var callback;
+
+    beforeEach(function() {
+      callback = spy();
+
+      adaptor.emit = spy();
+      stub(Spark, 'login').yields(null, 'loginInfo');
+      stub(Spark, 'getDevice').yields(null, { attributes: { value1: '1', value2: '2' } });
+
+      stub(Cylon.Logger, 'error');
+      adaptor.connect(callback);
+    });
+
+    afterEach(function() {
+      Spark.getDevice.restore();
+      Spark.login.restore();
+      Cylon.Logger.error.restore();
+    });
+
+    it("returns an object with the core attrs", function() {
+      expect(adaptor.coreAttrs()).to.be.eql({ value1: '1', value2: '2' });
     });
   });
 
