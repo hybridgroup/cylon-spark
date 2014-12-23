@@ -75,15 +75,14 @@ describe("Spark", function() {
 
       stub(Spark, 'login');
       adaptor.emit = spy();
-      // TODO: Change to regular stub once the spark module is updated
-      // stub(Spark, 'getDevice');
-      Spark.getDevice = stub();
+      stub(Spark, 'getDevice');
 
       stub(Cylon.Logger, 'error');
       adaptor.connect(callback);
     });
 
     afterEach(function() {
+      Spark.getDevice.restore();
       Spark.login.restore();
       Cylon.Logger.error.restore();
     });
@@ -152,6 +151,27 @@ describe("Spark", function() {
           expect(adaptor.core).to.be.eql("core");
         });
       });
+    });
+  });
+
+  describe("#disconnect", function() {
+    var callback;
+
+    beforeEach(function() {
+      callback = spy();
+
+      adaptor.emit = spy();
+
+      stub(Cylon.Logger, 'error');
+      adaptor.disconnect(callback);
+    });
+
+    afterEach(function() {
+      Cylon.Logger.error.restore();
+    });
+
+    it("triggers the callback", function() {
+      expect(callback).to.be.calledOnce;
     });
   });
 
