@@ -325,5 +325,21 @@ describe("VoodooSpark", function() {
       expect(board.analogWrite).to.be.calledWith(1, 255);
     });
   });
+
+  describe('#pinVal', function() {
+    beforeEach(function() {
+      spy(adaptor, 'pinVal');
+    });
+
+    it('returns HIGH with value 1', function() {
+      adaptor.pinVal(1);
+      expect(adaptor.pinVal).to.returned('HIGH');
+    });
+
+    it('returns LOW with value 0', function() {
+      adaptor.pinVal(0);
+      expect(adaptor.pinVal).to.returned('LOW');
+    });
+  });
 });
 
