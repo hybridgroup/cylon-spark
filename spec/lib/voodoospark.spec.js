@@ -4,7 +4,7 @@ var Cylon = require('cylon');
 
 var Adaptor = source("voodoospark-adaptor");
 
-var SparkIO = require('spark-io');
+var SparkIO = stub();
 
 describe("VoodooSpark", function() {
   var adaptor,
@@ -107,7 +107,7 @@ describe("VoodooSpark", function() {
       adaptor.commands.map(function(cmd) {
         expect(cmd).to.be.a('string');
       });
-    })
+    });
   });
 
   describe("#digitalRead", function() {
