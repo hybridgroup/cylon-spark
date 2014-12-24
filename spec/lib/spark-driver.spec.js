@@ -26,8 +26,6 @@ describe('Spark-Driver', function() {
 
     beforeEach(function() {
       callback = spy();
-
-      stub(driver, 'start').yields();
       driver.start(callback);
     });
 
@@ -275,5 +273,5 @@ describe('Spark-Driver', function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, 'eventName');
     });
-  }); 
+  });
 });
