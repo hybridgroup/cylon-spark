@@ -1,11 +1,13 @@
-var Cylon = require('cylon');
+"use strict";
+
+var Cylon = require("cylon");
 
 Cylon.robot({
   connections: {
     spark: {
-      adaptor: 'spark',
-      accessToken: '[YOUR_ACCESS_TOKEN]',
-      deviceId: '[YOUR_DEVICE_ID]'
+      adaptor: "spark",
+      accessToken: "[YOUR_ACCESS_TOKEN]",
+      deviceId: "[YOUR_DEVICE_ID]"
     }
   },
 

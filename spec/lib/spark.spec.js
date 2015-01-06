@@ -1,39 +1,41 @@
+// jshint expr:true
 "use strict";
 
-var Cylon = require('cylon');
+var Cylon = require("cylon");
 
 var Adaptor = source("spark-adaptor");
 
-var Spark = require('spark');
+var Spark = require("spark");
 
 describe("Spark", function() {
   var adaptor;
 
   beforeEach(function() {
     adaptor = new Adaptor({
-      deviceId: 'deviceId',
-      accessToken: 'accessToken',
+      deviceId: "deviceId",
+      accessToken: "accessToken",
       readInterval: 1000
     });
   });
 
   describe("#constructor", function() {
-    var error = "No deviceId and/or accessToken provided for Spark adaptor. Cannot proceed";
+    var error = "No deviceId and/or accessToken provided for Spark adaptor. ";
+    error += "Cannot proceed";
 
-    it('sets @deviceId to the provided value', function() {
-      expect(adaptor.deviceId).to.be.eql('deviceId');
+    it("sets @deviceId to the provided value", function() {
+      expect(adaptor.deviceId).to.be.eql("deviceId");
     });
 
-    it('sets @accessToken to the provided value', function() {
-      expect(adaptor.accessToken).to.be.eql('accessToken');
+    it("sets @accessToken to the provided value", function() {
+      expect(adaptor.accessToken).to.be.eql("accessToken");
     });
 
-    it('sets @readInterval to the provided value', function() {
+    it("sets @readInterval to the provided value", function() {
       expect(adaptor.readInterval).to.be.eql(1000);
     });
 
-    it('sets @readInterval to 2s by default', function() {
-      adaptor = new Adaptor({ deviceId: '', accessToken: '' });
+    it("sets @readInterval to 2s by default", function() {
+      adaptor = new Adaptor({ deviceId: "", accessToken: "" });
       expect(adaptor.readInterval).to.be.eql(2000);
     });
 
@@ -47,21 +49,21 @@ describe("Spark", function() {
 
     context("if no deviceId is specified", function() {
       it("throws an error", function() {
-        var fn = function() { new Adaptor({ accessToken: '' }); };
+        var fn = function() { return new Adaptor({ accessToken: "" }); };
         expect(fn).to.throw(error);
       });
     });
 
     context("if no accessToken is specified", function() {
       it("throws an error", function() {
-        var fn = function() { new Adaptor({ deviceId: '' }); };
+        var fn = function() { return new Adaptor({ deviceId: "" }); };
         expect(fn).to.throw(error);
       });
     });
 
     context("if no deviceId or accessToken is specified", function() {
       it("throws an error", function() {
-        var fn = function() { new Adaptor({}); };
+        var fn = function() { return new Adaptor({}); };
         expect(fn).to.throw(error);
       });
     });
@@ -73,11 +75,13 @@ describe("Spark", function() {
     beforeEach(function() {
       callback = spy();
 
-      stub(Spark, 'login');
-      adaptor.emit = spy();
-      stub(Spark, 'getDevice').yields(null, { coreid: '1234', token: '123456789' });
+      var core = { coreid: "1234", token: "123456789" };
 
-      stub(Cylon.Logger, 'error');
+      stub(Spark, "login");
+      adaptor.emit = spy();
+      stub(Spark, "getDevice").yields(null, core);
+
+      stub(Cylon.Logger, "error");
       adaptor.connect(callback);
     });
 
@@ -88,7 +92,7 @@ describe("Spark", function() {
     });
 
     it("attempts to log into the Spark API with the access token", function() {
-      expect(Spark.login).to.be.calledWith({ accessToken: 'accessToken' });
+      expect(Spark.login).to.be.calledWith({ accessToken: "accessToken" });
     });
 
     describe("if an error occurs while connecting to the API", function() {
@@ -132,8 +136,10 @@ describe("Spark", function() {
         });
 
         it("logs that a login error occured", function() {
-          var msg = "An error occured when retrieving core info from Spark Cloud: ";
-          expect(Cylon.Logger.error).to.be.calledWith(msg, "getDeviceError");
+          expect(Cylon.Logger.error).to.be.calledWith(
+            "An error occured when retrieving core info from Spark Cloud: ",
+            "getDeviceError"
+          );
         });
       });
 
@@ -162,7 +168,7 @@ describe("Spark", function() {
 
       adaptor.emit = spy();
 
-      stub(Cylon.Logger, 'error');
+      stub(Cylon.Logger, "error");
       adaptor.disconnect(callback);
     });
 
@@ -177,12 +183,12 @@ describe("Spark", function() {
 
   describe("#commands", function() {
     it("is an array of Spark commands", function() {
-      expect(adaptor.commands).to.be.an('array');
+      expect(adaptor.commands).to.be.an("array");
 
       adaptor.commands.map(function(cmd) {
-        expect(cmd).to.be.a('string');
+        expect(cmd).to.be.a("string");
       });
-    })
+    });
   });
 
   describe("#callFunction", function() {
@@ -196,7 +202,7 @@ describe("Spark", function() {
     it("triggers the core's #callFunction", function() {
       var callback = function() {};
       adaptor.callFunction("fn", ["1", 3, "testing"], callback);
-      expect(callFunction).to.be.calledWith("fn", "1,3,testing", callback)
+      expect(callFunction).to.be.calledWith("fn", "1,3,testing", callback);
     });
 
     context("if no arguments are passed", function() {
@@ -211,7 +217,7 @@ describe("Spark", function() {
   describe("#command", function() {
     it("is a proxy to callFunction", function() {
       expect(adaptor.command).to.be.eql(adaptor.callFunction);
-    })
+    });
   });
 
   describe("#getVariable", function() {
@@ -231,7 +237,7 @@ describe("Spark", function() {
     it("truncates after the 12th char", function() {
       adaptor.getVariable("temperature_sensor", callback);
       expect(getVariable).to.be.calledWith("temperature_", callback);
-    })
+    });
   });
 
   describe("#variable", function() {
@@ -247,7 +253,7 @@ describe("Spark", function() {
       adaptor.core = {};
       onEvent = adaptor.core.onEvent = stub();
       callback = spy();
-      adaptor.onEvent("hello", callback)
+      adaptor.onEvent("hello", callback);
     });
 
     it("subscribes to an event on the Spark Core", function() {
@@ -279,7 +285,7 @@ describe("Spark", function() {
       callFunction = adaptor.core.callFunction = stub();
       callback = spy();
 
-      stub(Cylon.Utils, 'every').yields();
+      stub(Cylon.Utils, "every").yields();
       adaptor.digitalRead("pin", callback);
     });
 
@@ -292,10 +298,10 @@ describe("Spark", function() {
     });
 
     it("tells the core to run the #digitalread command on the pin", function() {
-      expect(callFunction).to.be.calledWith('digitalread', 'pin');
+      expect(callFunction).to.be.calledWith("digitalread", "pin");
     });
 
-    it("doesn't make new requests if the current one hasn't finished", function() {
+    it("doesn't make new requests if current one hasn't finished", function() {
       Cylon.Utils.every.yield();
       expect(callFunction).to.be.calledOnce;
     });
@@ -331,10 +337,10 @@ describe("Spark", function() {
 
     it("writes values to the pin", function() {
       adaptor.digitalWrite(1, 0);
-      expect(callFunction).to.be.calledWith('digitalwrite', '1,LOW');
+      expect(callFunction).to.be.calledWith("digitalwrite", "1,LOW");
 
       adaptor.digitalWrite(1, 1);
-      expect(callFunction).to.be.calledWith('digitalwrite', '1,HIGH');
+      expect(callFunction).to.be.calledWith("digitalwrite", "1,HIGH");
     });
   });
 
@@ -346,7 +352,7 @@ describe("Spark", function() {
       callFunction = adaptor.core.callFunction = stub();
       callback = spy();
 
-      stub(Cylon.Utils, 'every').yields();
+      stub(Cylon.Utils, "every").yields();
       adaptor.analogRead("pin", callback);
     });
 
@@ -359,10 +365,10 @@ describe("Spark", function() {
     });
 
     it("tells the core to run the #analogread command on the pin", function() {
-      expect(callFunction).to.be.calledWith('analogread', 'pin');
+      expect(callFunction).to.be.calledWith("analogread", "pin");
     });
 
-    it("doesn't make new requests if the current one hasn't finished", function() {
+    it("doesn't make new requests if current one hasn't finished", function() {
       Cylon.Utils.every.yield();
       expect(callFunction).to.be.calledOnce;
     });
@@ -398,13 +404,13 @@ describe("Spark", function() {
 
     it("writes values to the pin", function() {
       adaptor.analogWrite(1, 0.5);
-      expect(callFunction).to.be.calledWith('analogwrite', '1,0.5');
+      expect(callFunction).to.be.calledWith("analogwrite", "1,0.5");
     });
   });
 
   describe("#pwmWrite", function() {
     beforeEach(function() {
-      stub(adaptor, 'analogWrite');
+      stub(adaptor, "analogWrite");
     });
 
     afterEach(function() {
@@ -419,7 +425,7 @@ describe("Spark", function() {
 
   describe("#servoWrite", function() {
     beforeEach(function() {
-      stub(adaptor, 'analogWrite');
+      stub(adaptor, "analogWrite");
     });
 
     afterEach(function() {
@@ -427,8 +433,8 @@ describe("Spark", function() {
     });
 
     it("converts values for #analogWrite", function() {
-      adaptor.servoWrite('A0', 0.5);
-      expect(adaptor.analogWrite).to.be.calledWith('S0', 90);
+      adaptor.servoWrite("A0", 0.5);
+      expect(adaptor.analogWrite).to.be.calledWith("S0", 90);
     });
   });
 
@@ -438,11 +444,13 @@ describe("Spark", function() {
     beforeEach(function() {
       callback = spy();
 
-      adaptor.emit = spy();
-      stub(Spark, 'login').yields(null, 'loginInfo');
-      stub(Spark, 'getDevice').yields(null, { attributes: { value1: '1', value2: '2' } });
+      var core = { attributes: { value1: "1", value2: "2" } };
 
-      stub(Cylon.Logger, 'error');
+      adaptor.emit = spy();
+      stub(Spark, "login").yields(null, "loginInfo");
+      stub(Spark, "getDevice").yields(null, core);
+
+      stub(Cylon.Logger, "error");
       adaptor.connect(callback);
     });
 
@@ -453,17 +461,17 @@ describe("Spark", function() {
     });
 
     it("returns an object with the core attrs", function() {
-      expect(adaptor.coreAttrs()).to.be.eql({ value1: '1', value2: '2' });
+      expect(adaptor.coreAttrs()).to.be.eql({ value1: "1", value2: "2" });
     });
   });
 
   describe("#pinVal", function() {
     it("returns 'HIGH' for values of 1", function() {
-      expect(adaptor.pinVal(1)).to.be.eql('HIGH');
+      expect(adaptor.pinVal(1)).to.be.eql("HIGH");
     });
 
     it("returns 'LOW' for other values", function() {
-      expect(adaptor.pinVal(0)).to.be.eql('LOW');
+      expect(adaptor.pinVal(0)).to.be.eql("LOW");
     });
   });
 });

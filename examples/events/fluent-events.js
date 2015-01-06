@@ -1,18 +1,20 @@
-var Cylon = require('cylon');
+"use strict";
+
+var Cylon = require("cylon");
 
 Cylon
   .robot()
 
-  .connection('spark', {
-    adaptor: 'spark',
-    accessToken: '[YOUR_ACCESS_TOKEN]',
-    deviceId: '[YOUR_DEVICE_ID]'
+  .connection("spark", {
+    adaptor: "spark",
+    accessToken: "[YOUR_ACCESS_TOKEN]",
+    deviceId: "[YOUR_DEVICE_ID]"
   })
 
-  .device('spark', { driver: 'spark' })
+  .device("spark", { driver: "spark" })
 
-  .on('ready', function(bot) {
-    bot.spark.onEvent('testevent', function(data) {
+  .on("ready", function(bot) {
+    bot.spark.onEvent("testevent", function(data) {
       console.log("Test Event Received. Data:", data);
     });
   });

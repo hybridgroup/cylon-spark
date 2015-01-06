@@ -1,15 +1,12 @@
+// jshint expr:true
 "use strict";
 
-var Cylon = require('cylon');
-
 var Adaptor = source("voodoospark-adaptor");
-
-var SparkIO = stub();
 
 describe("VoodooSpark", function() {
   var adaptor,
       board = {
-        token: '012345', deviceId: '1234',
+        token: "012345", deviceId: "1234",
         on: stub(),
         MODES: {
           INPUT: 0,
@@ -22,41 +19,42 @@ describe("VoodooSpark", function() {
 
   beforeEach(function() {
     adaptor = new Adaptor({
-      deviceId: 'deviceId',
-      accessToken: 'accessToken',
+      deviceId: "deviceId",
+      accessToken: "accessToken",
       readInterval: 1000
     });
   });
 
-  describe('#constructor', function() {
-    var error = "No deviceId and/or accessToken provided for VoodooSpark adaptor. Cannot proceed";
+  describe("#constructor", function() {
+    var e = "No deviceId and/or accessToken provided for VoodooSpark adaptor. ";
+    e += "Cannot proceed";
 
-    it('sets @deviceId to the provided value', function() {
-      expect(adaptor.deviceId).to.be.eql('deviceId');
+    it("sets @deviceId to the provided value", function() {
+      expect(adaptor.deviceId).to.be.eql("deviceId");
     });
 
-    it('sets @accessToken to the provided value', function() {
-      expect(adaptor.accessToken).to.be.eql('accessToken');
+    it("sets @accessToken to the provided value", function() {
+      expect(adaptor.accessToken).to.be.eql("accessToken");
     });
 
     context("if no deviceId is specified", function() {
       it("throws an error", function() {
-        var fn = function() { new Adaptor({ accessToken: '' }); };
-        expect(fn).to.throw(error);
+        var fn = function() { return new Adaptor({ accessToken: "" }); };
+        expect(fn).to.throw(e);
       });
     });
 
     context("if no accessToken is specified", function() {
       it("throws an error", function() {
-        var fn = function() { new Adaptor({ deviceId: '' }); };
-        expect(fn).to.throw(error);
+        var fn = function() { return new Adaptor({ deviceId: "" }); };
+        expect(fn).to.throw(e);
       });
     });
 
     context("if no deviceId or accessToken is specified", function() {
       it("throws an error", function() {
-        var fn = function() { new Adaptor({}); };
-        expect(fn).to.throw(error);
+        var fn = function() { return new Adaptor({}); };
+        expect(fn).to.throw(e);
       });
     });
   });
@@ -68,7 +66,7 @@ describe("VoodooSpark", function() {
       callback = spy();
 
       board.on.yields();
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
 
       adaptor.connect(callback);
     });
@@ -102,10 +100,10 @@ describe("VoodooSpark", function() {
 
   describe("#commands", function() {
     it("is an array of Spark commands", function() {
-      expect(adaptor.commands).to.be.an('array');
+      expect(adaptor.commands).to.be.an("array");
 
       adaptor.commands.map(function(cmd) {
-        expect(cmd).to.be.a('string');
+        expect(cmd).to.be.a("string");
       });
     });
   });
@@ -116,10 +114,10 @@ describe("VoodooSpark", function() {
     beforeEach(function() {
       callback = spy();
 
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
       board.pinMode = spy();
       board.digitalRead = stub();
-      board.digitalRead.yields('data');
+      board.digitalRead.yields("data");
 
       adaptor.connect(callback);
       callback.reset();
@@ -131,11 +129,11 @@ describe("VoodooSpark", function() {
       board.pinMode.reset();
     });
 
-    it("expects to call pinMode with mode INPUT", function() {
+    it("calls pinMode with mode INPUT", function() {
       expect(board.pinMode).to.be.calledWith(1, board.MODES.INPUT);
     });
 
-    it("expects to call board.digitalRead with pin number", function() {
+    it("calls board.digitalRead with pin number", function() {
       expect(board.digitalRead).to.be.calledWith(1);
     });
 
@@ -150,10 +148,10 @@ describe("VoodooSpark", function() {
     beforeEach(function() {
       callback = spy();
 
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
       board.pinMode = spy();
       board.analogRead = stub();
-      board.analogRead.yields('data');
+      board.analogRead.yields("data");
 
       adaptor.connect(callback);
       callback.reset();
@@ -165,11 +163,11 @@ describe("VoodooSpark", function() {
       board.pinMode.reset();
     });
 
-    it("expects to call pinMode with mode ANALOG", function() {
+    it("calls pinMode with mode ANALOG", function() {
       expect(board.pinMode).to.be.calledWith(1, board.MODES.ANALOG);
     });
 
-    it("expects to call board.analogRead with pin number", function() {
+    it("calls board.analogRead with pin number", function() {
       expect(board.digitalRead).to.be.calledWith(1);
     });
 
@@ -178,15 +176,15 @@ describe("VoodooSpark", function() {
     });
   });
 
-  describe('#digitalWrite', function() {
+  describe("#digitalWrite", function() {
     var callback;
 
     beforeEach(function() {
       callback = spy();
 
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
       board.pinMode = spy();
-      spy(adaptor, '_write');
+      spy(adaptor, "_write");
       board.digitalWrite = stub();
 
       adaptor.connect(callback);
@@ -199,31 +197,31 @@ describe("VoodooSpark", function() {
       adaptor._write.restore();
     });
 
-    it("expects to call board.pinMode with mode OUTPUT", function() {
+    it("calls board.pinMode with mode OUTPUT", function() {
       expect(board.pinMode).to.be.calledOnce;
       expect(board.pinMode).to.be.calledWith(1, board.MODES.OUTPUT);
     });
 
-    it("expects to call board.digitalWrite with pin number", function() {
+    it("calls board.digitalWrite with pin number", function() {
       expect(board.digitalWrite).to.be.calledOnce;
       expect(board.digitalWrite).to.be.calledWith(1, 1);
     });
 
-    it("expects to call adaptor._write with ", function() {
+    it("calls adaptor._write with ", function() {
       expect(board.digitalWrite).to.be.calledOnce;
       expect(board.digitalWrite).to.be.calledWith(1, 1);
     });
   });
 
-  describe('#analogWrite', function() {
+  describe("#analogWrite", function() {
     var callback;
 
     beforeEach(function() {
       callback = spy();
 
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
       board.pinMode = spy();
-      spy(adaptor, '_write');
+      spy(adaptor, "_write");
       board.analogWrite = stub();
 
       adaptor.connect(callback);
@@ -236,31 +234,31 @@ describe("VoodooSpark", function() {
       adaptor._write.restore();
     });
 
-    it("expects to call adaptor._write", function() {
+    it("calls adaptor._write", function() {
       expect(adaptor._write).to.be.calledOnce;
       expect(adaptor._write).to.be.calledWith(board.MODES.PWM, 255, 1, 1);
     });
 
-    it("expects to call board.pinMode with mode PWM", function() {
+    it("calls board.pinMode with mode PWM", function() {
       expect(board.pinMode).to.be.calledOnce;
       expect(board.pinMode).to.be.calledWith(1, board.MODES.PWM);
     });
 
-    it("expects to call board.analogWrite with pin number and scaled value", function() {
+    it("calls board.analogWrite with pin number and scaled value", function() {
       expect(board.analogWrite).to.be.calledOnce;
       expect(board.analogWrite).to.be.calledWith(1, 255);
     });
   });
 
-  describe('#servoWrite', function() {
+  describe("#servoWrite", function() {
     var callback;
 
     beforeEach(function() {
       callback = spy();
 
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
       board.pinMode = spy();
-      spy(adaptor, '_write');
+      spy(adaptor, "_write");
       board.servoWrite = stub();
 
       adaptor.connect(callback);
@@ -273,31 +271,31 @@ describe("VoodooSpark", function() {
       adaptor._write.restore();
     });
 
-    it("expects to call adaptor._write with", function() {
+    it("calls adaptor._write with", function() {
       expect(adaptor._write).to.be.calledOnce;
       expect(adaptor._write).to.be.calledWith(board.MODES.SERVO, 180, 1, 1);
     });
 
-    it("expects to call board.pinMode with mode PWM", function() {
+    it("calls board.pinMode with mode PWM", function() {
       expect(board.pinMode).to.be.calledOnce;
       expect(board.pinMode).to.be.calledWith(1, board.MODES.SERVO);
     });
 
-    it("expects to call board.servoWrite with pin number and scaled value", function() {
+    it("calls board.servoWrite with pin number and scaled value", function() {
       expect(board.servoWrite).to.be.calledOnce;
       expect(board.servoWrite).to.be.calledWith(1, 180);
     });
   });
 
-  describe('#pwmWrite', function() {
+  describe("#pwmWrite", function() {
     var callback;
 
     beforeEach(function() {
       callback = spy();
 
-      stub(adaptor, '_sparkio').returns(board);
+      stub(adaptor, "_sparkio").returns(board);
       board.pinMode = spy();
-      spy(adaptor, '_write');
+      spy(adaptor, "_write");
       board.analogWrite = stub();
 
       adaptor.connect(callback);
@@ -310,35 +308,35 @@ describe("VoodooSpark", function() {
       adaptor._write.restore();
     });
 
-    it("expects to call adaptor._write", function() {
+    it("calls adaptor._write", function() {
       expect(adaptor._write).to.be.calledOnce;
       expect(adaptor._write).to.be.calledWith(board.MODES.PWM, 255, 1, 1);
     });
 
-    it("expects to call board.pinMode with mode PWM", function() {
+    it("calls board.pinMode with mode PWM", function() {
       expect(board.pinMode).to.be.calledOnce;
       expect(board.pinMode).to.be.calledWith(1, board.MODES.PWM);
     });
 
-    it("expects to call board.analogWrite with pin number and scaled value", function() {
+    it("calls board.analogWrite with pin number and scaled value", function() {
       expect(board.analogWrite).to.be.calledOnce;
       expect(board.analogWrite).to.be.calledWith(1, 255);
     });
   });
 
-  describe('#pinVal', function() {
+  describe("#pinVal", function() {
     beforeEach(function() {
-      spy(adaptor, 'pinVal');
+      spy(adaptor, "pinVal");
     });
 
-    it('returns HIGH with value 1', function() {
+    it("returns HIGH with value 1", function() {
       adaptor.pinVal(1);
-      expect(adaptor.pinVal).to.returned('HIGH');
+      expect(adaptor.pinVal).to.returned("HIGH");
     });
 
-    it('returns LOW with value 0', function() {
+    it("returns LOW with value 0", function() {
       adaptor.pinVal(0);
-      expect(adaptor.pinVal).to.returned('LOW');
+      expect(adaptor.pinVal).to.returned("LOW");
     });
   });
 });
