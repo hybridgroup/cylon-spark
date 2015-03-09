@@ -14,7 +14,7 @@ Want to use the Go programming language to power your robots? Check out our sist
 
 Install the module with:
 
-    $ npm install cylon-spark
+    $ npm install cylon cylon-spark
 
 You'll need your `access_token` and `device_id` to push new software to yourSpark, and you can get both of these from Spark's [Build tool](https://spark.io/build).
 
