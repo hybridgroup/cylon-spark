@@ -236,7 +236,9 @@ describe("VoodooSpark", function() {
 
     it("calls adaptor._write", function() {
       expect(adaptor._write).to.be.calledOnce;
-      expect(adaptor._write).to.be.calledWith("analog", board.MODES.PWM, 255, 1, 1);
+      expect(adaptor._write)
+        .to.be
+        .calledWith("analog", board.MODES.PWM, 255, 1, 1);
     });
 
     it("calls board.pinMode with mode PWM", function() {
@@ -273,7 +275,9 @@ describe("VoodooSpark", function() {
 
     it("calls adaptor._write with", function() {
       expect(adaptor._write).to.be.calledOnce;
-      expect(adaptor._write).to.be.calledWith("servo", board.MODES.SERVO, 180, 1, 1);
+      expect(adaptor._write)
+        .to.be
+        .calledWith("servo", board.MODES.SERVO, 180, 1, 1);
     });
 
     it("calls board.pinMode with mode PWM", function() {
@@ -310,7 +314,9 @@ describe("VoodooSpark", function() {
 
     it("calls adaptor._write", function() {
       expect(adaptor._write).to.be.calledOnce;
-      expect(adaptor._write).to.be.calledWith("pwm", board.MODES.PWM, 255, 1, 1);
+      expect(adaptor._write)
+        .to.be
+        .calledWith("pwm", board.MODES.PWM, 255, 1, 1);
     });
 
     it("calls board.pinMode with mode PWM", function() {
