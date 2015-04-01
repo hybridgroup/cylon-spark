@@ -208,8 +208,8 @@ describe("Spark", function() {
     context("if no arguments are passed", function() {
       it("defaults to an empty set", function() {
         var callback = function() {};
-        adaptor.callFunction("fn", null, callback);
-        expect(callFunction).to.be.calledWith("fn", "", callback);
+        adaptor.callFunction("fnName", null, callback);
+        expect(callFunction).to.be.calledWith("fnname", "", callback);
       });
     });
   });
@@ -317,12 +317,17 @@ describe("Spark", function() {
     });
 
     context("if #digitalread returns an error", function() {
+      var errCb;
+
       beforeEach(function() {
+        errCb = spy();
+        adaptor.on("error", errCb);
+
         callFunction.yield("error", null);
       });
 
       it("triggers the callback with the error", function() {
-        expect(callback).to.be.calledWith("error", null);
+        expect(errCb).to.be.calledWith("error");
       });
     });
   });
@@ -374,12 +379,17 @@ describe("Spark", function() {
     });
 
     context("if #analogread returns an error", function() {
+      var errCb;
+
       beforeEach(function() {
+        errCb = spy();
+        adaptor.on("error", errCb);
+
         callFunction.yield("error", null);
       });
 
       it("triggers the callback with the error", function() {
-        expect(callback).to.be.calledWith("error", null);
+        expect(errCb).to.be.calledWith("error");
       });
     });
 
@@ -410,31 +420,31 @@ describe("Spark", function() {
 
   describe("#pwmWrite", function() {
     beforeEach(function() {
-      stub(adaptor, "analogWrite");
+      stub(adaptor, "_write");
     });
 
     afterEach(function() {
-      adaptor.analogWrite.restore();
+      adaptor._write.restore();
     });
 
-    it("converts converts values for #analogWrite", function() {
+    it("converts values for #analogWrite", function() {
       adaptor.pwmWrite(1, 0.6);
-      expect(adaptor.analogWrite).to.be.calledWith(1, 153);
+      expect(adaptor._write).to.be.calledWith("pwmWrite", 1, 153);
     });
   });
 
   describe("#servoWrite", function() {
     beforeEach(function() {
-      stub(adaptor, "analogWrite");
+      stub(adaptor, "_write");
     });
 
     afterEach(function() {
-      adaptor.analogWrite.restore();
+      adaptor._write.restore();
     });
 
     it("converts values for #analogWrite", function() {
       adaptor.servoWrite("A0", 0.5);
-      expect(adaptor.analogWrite).to.be.calledWith("S0", 90);
+      expect(adaptor._write).to.be.calledWith("servoWrite", "S0", 90);
     });
   });
 
