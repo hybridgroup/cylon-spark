@@ -22,11 +22,6 @@
     "sinon": "1.10.3"
   },
 
-  "peerDependencies": {
-    "cylon":      ">= 0.22.0 < 1",
-    "cylon-gpio": ">= 0.22.0 < 1"
-  },
-
   "dependencies": {
     "restler":     "~3.2.0",
     "cylon":      "~0.22.0",
