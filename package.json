@@ -1,6 +1,6 @@
 {
   "name": "cylon-spark",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "main": "lib/cylon-spark.js",
   "description": "Cylon adaptor for the Spark core device",
   "homepage": "http://cylonjs.com",
@@ -24,8 +24,8 @@
 
   "dependencies": {
     "restler":     "~3.2.0",
-    "cylon":      "~0.22.0",
-    "cylon-gpio": "~0.22.0",
+    "cylon":      "~1.0.0",
+    "cylon-gpio": "~0.23.0",
     "eventsource": "~0.1.0",
     "spark":    ">= 0.2.1",
     "spark-io":    ">= 0.3.9"
