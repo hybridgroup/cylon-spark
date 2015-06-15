@@ -27,7 +27,7 @@
     "gpio",
     "spark",
     "spark core",
-    "particle"
+    "particle",
     "spark.js"
   ],
 
@@ -35,7 +35,8 @@
     "sinon-chai": "2.6.0",
     "chai": "1.9.2",
     "mocha": "1.21.5",
-    "sinon": "1.10.3"
+    "sinon": "1.10.3",
+    "eslint": "0.22.1"
   },
 
   "dependencies": {

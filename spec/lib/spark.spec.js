@@ -1,9 +1,8 @@
-// jshint expr:true
 "use strict";
 
 var Cylon = require("cylon");
 
-var Adaptor = source("spark-adaptor");
+var Adaptor = lib("spark-adaptor");
 
 var Spark = require("spark");
 

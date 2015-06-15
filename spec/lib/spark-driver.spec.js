@@ -1,7 +1,6 @@
-// jshint expr:true
 "use strict";
 
-var Driver = source("spark-driver");
+var Driver = lib("spark-driver");
 
 describe("Spark-Driver", function() {
   var driver;
@@ -26,7 +25,7 @@ describe("Spark-Driver", function() {
       driver.start(callback);
     });
 
-    it("expects to trigger callback once", function(){
+    it("expects to trigger callback once", function() {
       expect(callback).to.be.calledOnce;
     });
   });
@@ -41,13 +40,13 @@ describe("Spark-Driver", function() {
       driver.halt(callback);
     });
 
-    it("expects to trigger callback once", function(){
+    it("expects to trigger callback once", function() {
       expect(callback).to.be.calledOnce;
     });
   });
 
   describe("#core", function() {
-    it("expects to call connection.coreAttrs once", function(){
+    it("expects to call connection.coreAttrs once", function() {
       var connection = driver.connection = { coreAttrs: stub() };
       driver.core();
       expect(connection.coreAttrs).to.be.calledOnce;
@@ -63,12 +62,12 @@ describe("Spark-Driver", function() {
       driver.digitalRead(1, callback);
     });
 
-    it("expects to call connection.digitalRead with params:", function(){
+    it("expects to call connection.digitalRead with params:", function() {
       expect(connection.digitalRead).to.be.calledOnce;
       expect(connection.digitalRead).to.be.calledWith(1, callback);
     });
 
-    it("expects connection.digitalRead to trigger callback", function(){
+    it("expects connection.digitalRead to trigger callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, "data");
     });
@@ -85,12 +84,12 @@ describe("Spark-Driver", function() {
       driver.analogRead(1, callback);
     });
 
-    it("expects to call connection.digitalRead with params:", function(){
+    it("expects to call connection.digitalRead with params:", function() {
       expect(connection.analogRead).to.be.calledOnce;
       expect(connection.analogRead).to.be.calledWith(1, callback);
     });
 
-    it("expects connection.digitalRead to trigger callback", function(){
+    it("expects connection.digitalRead to trigger callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, "data");
     });
@@ -107,12 +106,12 @@ describe("Spark-Driver", function() {
       driver.digitalWrite(1, 1, callback);
     });
 
-    it("expects to call connection.digitalWrite once, with params:", function(){
+    it("expects to call connection.digitalWrite once, with params", function() {
       expect(connection.digitalWrite).to.be.calledOnce;
       expect(connection.digitalWrite).to.be.calledWith(1, 1);
     });
 
-    it("expects connection.digitalWrite to trigger the callback", function(){
+    it("expects connection.digitalWrite to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, "HIGH");
     });
@@ -129,12 +128,12 @@ describe("Spark-Driver", function() {
       driver.analogWrite(1, 0.5, callback);
     });
 
-    it("expects to call connection.analogWrite once, with params:", function(){
+    it("expects to call connection.analogWrite once, with params:", function() {
       expect(connection.analogWrite).to.be.calledOnce;
       expect(connection.analogWrite).to.be.calledWith(1, 0.5, callback);
     });
 
-    it("expects connection.analogWrite to trigger the callback", function(){
+    it("expects connection.analogWrite to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, 0.5);
     });
@@ -151,12 +150,12 @@ describe("Spark-Driver", function() {
       driver.pwmWrite(1, 0.5, callback);
     });
 
-    it("expects to call connection.pwmWrite once, with params:", function(){
+    it("expects to call connection.pwmWrite once, with params:", function() {
       expect(connection.pwmWrite).to.be.calledOnce;
       expect(connection.pwmWrite).to.be.calledWith(1, 0.5, callback);
     });
 
-    it("expects connection.pwmWrite to trigger the callback", function(){
+    it("expects connection.pwmWrite to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, 0.5);
     });
@@ -173,12 +172,12 @@ describe("Spark-Driver", function() {
       driver.servoWrite(1, 0.5, callback);
     });
 
-    it("expects to call connection.servoWrite once, with params:", function(){
+    it("expects to call connection.servoWrite once, with params:", function() {
       expect(connection.servoWrite).to.be.calledOnce;
       expect(connection.servoWrite).to.be.calledWith(1, 0.5, callback);
     });
 
-    it("expects connection.servoWrite to trigger the callback", function(){
+    it("expects connection.servoWrite to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, 0.5);
     });
@@ -195,7 +194,7 @@ describe("Spark-Driver", function() {
       driver.callFunction("funcName", { arg1: 1, arg2: 2 }, callback);
     });
 
-    it("expects to call connection.callFunction once, with params:", function(){
+    it("expects to call connection.callFunction once, with params", function() {
       expect(connection.callFunction).to.be.calledOnce;
       expect(connection.callFunction).to.be.calledWith(
         "funcName",
@@ -204,7 +203,7 @@ describe("Spark-Driver", function() {
       );
     });
 
-    it("expects connection.servoWrite to trigger the callback", function(){
+    it("expects connection.servoWrite to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, 0.5);
     });
@@ -221,12 +220,12 @@ describe("Spark-Driver", function() {
       driver.getVariable("varName", callback);
     });
 
-    it("expects to call connection.getVariable once, with params", function(){
+    it("expects to call connection.getVariable once, with params", function() {
       expect(connection.getVariable).to.be.calledOnce;
       expect(connection.getVariable).to.be.calledWith("varName", callback);
     });
 
-    it("expects connection.getVariable to trigger the callback", function(){
+    it("expects connection.getVariable to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, "varName");
     });
@@ -243,12 +242,12 @@ describe("Spark-Driver", function() {
       driver.getVariable("varName", callback);
     });
 
-    it("expects to call connection.getVariable once, with params:", function(){
+    it("expects to call connection.getVariable once, with params:", function() {
       expect(connection.getVariable).to.be.calledOnce;
       expect(connection.getVariable).to.be.calledWith("varName", callback);
     });
 
-    it("expects connection.getVariable to trigger the callback", function(){
+    it("expects connection.getVariable to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, "varName");
     });
@@ -265,12 +264,12 @@ describe("Spark-Driver", function() {
       driver.onEvent("eventName", callback);
     });
 
-    it("expects to call connection.onEvent once, with params:", function(){
+    it("expects to call connection.onEvent once, with params:", function() {
       expect(connection.onEvent).to.be.calledOnce;
       expect(connection.onEvent).to.be.calledWith("eventName", callback);
     });
 
-    it("expects connection.getVariable to trigger the callback", function(){
+    it("expects connection.getVariable to trigger the callback", function() {
       expect(callback).to.be.calledOnce;
       expect(callback).to.be.calledWith(null, "eventName");
     });

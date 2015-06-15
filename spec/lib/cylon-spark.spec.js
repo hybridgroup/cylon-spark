@@ -1,11 +1,10 @@
-// jshint expr:true
 "use strict";
 
-var Adaptor = source("spark-adaptor"),
-    Driver = source("spark-driver"),
-    VoodooSpark = source("voodoospark-adaptor");
+var Adaptor = lib("spark-adaptor"),
+    Driver = lib("spark-driver"),
+    VoodooSpark = lib("voodoospark-adaptor");
 
-var spark = source("cylon-spark");
+var spark = lib("cylon-spark");
 
 describe("Cylon.Spark", function() {
   describe("#adaptors", function() {

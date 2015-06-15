@@ -1,7 +1,6 @@
-// jshint expr:true
 "use strict";
 
-var Adaptor = source("voodoospark-adaptor");
+var Adaptor = lib("voodoospark-adaptor");
 
 describe("VoodooSpark", function() {
   var adaptor,
