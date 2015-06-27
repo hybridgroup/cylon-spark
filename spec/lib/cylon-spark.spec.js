@@ -4,7 +4,7 @@ var Adaptor = lib("spark-adaptor"),
     Driver = lib("spark-driver"),
     VoodooSpark = lib("voodoospark-adaptor");
 
-var spark = lib("cylon-spark");
+var spark = lib("../");
 
 describe("Cylon.Spark", function() {
   describe("#adaptors", function() {
