@@ -11,4 +11,4 @@ install:
   - npm install -g jshint istanbul codeclimate-test-reporter
 script:
   - make ci
-  - CODECLIMATE_REPO_TOKEN=a26679d8271edd15d41889b92812ac00d6d1b6eafca2178b2a15b9a4c00b94b4 codeclimate < coverage/lcov.info
+  - CODECLIMATE_REPO_TOKEN=a26679d8271edd15d41889b92812ac00d6d1b6eafca2178b2a15b9a4c00b94b4 codeclimate-test-reporter < coverage/lcov.info
