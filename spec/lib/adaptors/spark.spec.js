@@ -2,7 +2,7 @@
 
 var Cylon = require("cylon");
 
-var Adaptor = lib("spark-adaptor");
+var Adaptor = lib("adaptors/spark");
 
 var Spark = require("spark");
 

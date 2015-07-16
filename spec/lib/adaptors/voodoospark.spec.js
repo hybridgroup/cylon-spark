@@ -1,6 +1,6 @@
 "use strict";
 
-var Adaptor = lib("voodoospark-adaptor");
+var Adaptor = lib("adaptors/voodoospark");
 
 describe("VoodooSpark", function() {
   var adaptor,

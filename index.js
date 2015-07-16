@@ -1,14 +1,14 @@
 "use strict";
 
 var Adaptors = {
-  spark: require("./lib/spark-adaptor"),
-  voodoospark: require("./lib/voodoospark-adaptor")
+  spark: require("./lib/adaptors/spark"),
+  voodoospark: require("./lib/adaptors/voodoospark")
 };
 
-var Driver = require("./lib/spark-driver.js");
+var Driver = require("./lib/driver.js");
 
 module.exports = {
-  adaptors: ["spark", "voodoospark"],
+  adaptors: Object.keys(Adaptors),
   drivers: ["spark"],
   dependencies: ["cylon-gpio"],
 

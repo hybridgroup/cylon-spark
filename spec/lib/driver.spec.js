@@ -1,6 +1,6 @@
 "use strict";
 
-var Driver = lib("spark-driver");
+var Driver = lib("driver");
 
 describe("Spark-Driver", function() {
   var driver;

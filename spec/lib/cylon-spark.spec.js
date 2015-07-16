@@ -1,8 +1,8 @@
 "use strict";
 
-var Adaptor = lib("spark-adaptor"),
-    Driver = lib("spark-driver"),
-    VoodooSpark = lib("voodoospark-adaptor");
+var Adaptor = lib("adaptors/spark"),
+    Driver = lib("driver"),
+    VoodooSpark = lib("adaptors/voodoospark");
 
 var spark = lib("../");
 
