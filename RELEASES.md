@@ -1,5 +1,7 @@
 ## Release History
 
+Version 0.21.1 - Correct require error due to dependency renaming
+
 Version 0.21.0 - Use Cylon 1.2.0
 
 Version 0.20.0 - Use Cylon 1.1.0

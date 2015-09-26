@@ -1,6 +1,6 @@
 {
   "name": "cylon-spark",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "Cylon adaptor for the Particle Core & Photon device",
   "homepage": "http://cylonjs.com",
   "bugs": "https://github.com/hybridgroup/cylon-spark/issues",
@@ -27,6 +27,7 @@
     "spark",
     "spark core",
     "particle",
+    "particle-io",
     "spark.js",
     "photon"
   ],
